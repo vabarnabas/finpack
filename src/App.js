@@ -5,8 +5,8 @@ import { useAuthState } from 'react-firebase-hooks/auth'
 import { getAuth } from "firebase/auth";
 import {initializeFirestore} from 'firebase/firestore'; 
 
-import Navbar from './components/Navbar';
 import Login from './components/Login';
+import Dashboard from './components/Dashboard';
 
 const firebaseConfig = {
   apiKey: "AIzaSyBmMdqmGDNJToWv-i69IejXuwxZAXkrMc0",
@@ -18,19 +18,16 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-initializeFirestore(app, {experimentalForceLongPolling: true});
 const auth = getAuth(app);
+initializeFirestore(app, {experimentalForceLongPolling: true});
 
 function App() {
 
   const[user] = useAuthState(auth);
 
   return (
-    <div className="h-screen w-screen select-none overflow-hidden">
-      <Navbar auth={auth} user={user} />
-      <div className="pt-14 w-full h-full">
-      {user ? '' : <Login auth={auth} />}
-      </div>
+    <div className="h-screen w-screen select-none overflow-hidden bg-slate-100">
+      {user ? <Dashboard auth={auth} /> : <Login auth={auth} />}
     </div>
   );
 }
