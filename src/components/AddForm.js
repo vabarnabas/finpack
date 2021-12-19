@@ -15,7 +15,7 @@ const AddForm = (props) => {
 
     return (
         <div className='group relative w-full h-full flex items-center justify-center bg-slate-200 rounded-lg '>
-            <HiX onClick={() => {localStorage.setItem(props.position,'');props.setStateChange(props.stateChange+1)}} className='absolute top-3 right-3 text-slate-500 hover:text-slate-600 text-lg hidden group-hover:block'/>
+            <HiX onClick={() => {localStorage.removeItem(props.position);props.setStateChange(props.stateChange+1)}} className='absolute top-3 right-3 text-slate-500 hover:text-slate-600 text-lg hidden group-hover:block'/>
             <form className="flex flex-col items-center justify-center px-6">
                 <p className="text-slate-600 mb-3">Részletfizető Hozzáadása</p>
                 <div className="grid grid-cols-2 grid-rows-3 place-content-center gap-4">

@@ -4,6 +4,7 @@ import { signOut } from "firebase/auth";
 import { v4 as uuidv4 } from 'uuid';
 import { HiLogin, HiSearch} from 'react-icons/hi'
 import { menuItems } from './MenuItems';
+import Switch, { Case, Default } from 'react-switch-case';
 
 import Empty from './Empty';
 import AddForm from './AddForm';
@@ -60,7 +61,8 @@ const Dashboard = (props) => {
                         <HiLogin className='text-2xl'/>
                 </div>
             </div>
-
+            {/* State Box */}
+            <div className="absolute h-full w-full"></div>
             {/* Right Box */}
             <div className="flex flex-col w-full">
             {/* Search Box */}
@@ -68,15 +70,19 @@ const Dashboard = (props) => {
                 <div className="flex items-center justify-start pl-4">
                         <HiSearch className='text-lg text-slate-600 mr-1.5'/>
                         <input placeholder='Keresés' type="text" className="bg-transparent outline-none text-sm text-slate-600 align-middle" />
-
                 </div>
             </div>
             <div onClick={(e) => e.stopPropagation()} className="w-full h-full grid grid-cols-2 grid-rows-2 gap-2 p-2">
             {dashboardItems.map((item) => (
-                <div className="">
-                    {item.state === '' ? <Empty key={uuidv4()} state={item.state} position={item.position} stateChange={stateChange} setStateChange={(stateChange) => setStateChange(stateChange)} /> : ''}
-                    {item.state === 'user-add' ? <AddForm key={uuidv4()} state={item.state} position={item.position} stateChange={stateChange} setStateChange={(stateChange) => setStateChange(stateChange)} /> : ''}
-                    {}
+                <div key={uuidv4()} className="">
+                    <Switch condition={item.state}>
+                        <Case value="user-add">
+                        <AddForm key={uuidv4()} state={item.state} position={item.position} stateChange={stateChange} setStateChange={(stateChange) => setStateChange(stateChange)} />
+                        </Case>
+                        <Default>
+                        <Empty key={uuidv4()} state={item.state} position={item.position} stateChange={stateChange} setStateChange={(stateChange) => setStateChange(stateChange)} />
+                        </Default>
+                    </Switch>
                 </div>
             ))}
             </div>

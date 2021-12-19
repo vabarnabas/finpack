@@ -40,7 +40,7 @@ const Login = (props) => {
     return (
         <div className='flex h-full w-full justify-center items-center'>
             <form onSubmit={onSignIn} className="flex flex-col items-center justify-center bg-white p-10 rounded-lg">
-                <p className="text-3xl text-s-500 font-bold mb-12">Belépés</p>
+                <p className="text-3xl text-s-500 text-slate-600 font-bold mb-12">Belépés</p>
                 <input value={email} onChange={(e) => setEmail(e.target.value)} required placeholder='E-mail cím' type="email" className={`bg-stone-100 rounded-full px-4 py-1 mb-0.5 focus:outline-none ${error === '' ? '' : 'ring-2 ring-pink-500 text-pink-500'}`} />
                 <p className="text-pink-500 mr-auto pl-4 text-xs mb-3">{error}</p>
                 <input value={password} onChange={(e) => setPassword(e.target.value)} required placeholder='Jelszó' type="password" className="bg-stone-100 rounded-full focus:outline-none px-4 py-1 mb-6" />
