@@ -64,7 +64,11 @@ const Dashboard = (props) => {
                 </div>
             </div>
             {/* State Box */}
-            <div className="absolute hidden h-full w-full"></div>
+            <div className="fixed z-20 hidden items-center justify-center bg-slate-500 bg-opacity-60 top-0 left-0 h-full w-full">
+                <div className="w-[50%] h-[50%]">
+                    <Empty key={uuidv4()} state={'middle'} position={'middle'} stateChange={stateChange} setStateChange={(stateChange) => setStateChange(stateChange)} />
+                </div>
+            </div>
             {/* Right Box */}
             <div className="flex flex-col w-full">
             {/* Search Box */}
@@ -76,7 +80,7 @@ const Dashboard = (props) => {
             </div>
             <div onClick={(e) => e.stopPropagation()} className="w-full h-full grid grid-cols-1 grid-rows-1 md:grid-cols-2 md:grid-rows-2 md:gap-2 p-2">
             {dashboardItems.map((item) => (
-                <div key={uuidv4()} className="">
+                <div key={uuidv4()} className="hidden first:flex sm:flex">
                     <Switch condition={item.state}>
                         <Case value="user-add">
                         <AddForm key={uuidv4()} state={item.state} position={item.position} stateChange={stateChange} setStateChange={(stateChange) => setStateChange(stateChange)}/>
