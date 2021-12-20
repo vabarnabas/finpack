@@ -17,14 +17,15 @@ const Dashboard = (props) => {
     const [topRight, setTopRight] = useState(localStorage.getItem('topRight'));
     const [bottomLeft, setBottomLeft] = useState(localStorage.getItem('bottomLeft'));
     const [bottomRight, setBottomRight] = useState(localStorage.getItem('bottomRight'));
+    const [middle, setMiddle] = useState(localStorage.getItem('middle'))
 
-    const [selfSearch, setSelfSearch] = useState(false);
 
     useEffect(() => {
         setTopLeft(localStorage.getItem('topLeft'));
         setTopRight(localStorage.getItem('topRight'));
         setBottomLeft(localStorage.getItem('bottomLeft'));
         setBottomRight(localStorage.getItem('bottomRight'));
+        setMiddle(localStorage.getItem('middle'))
     },[stateChange])
 
     const dashboardItems = [
@@ -52,7 +53,7 @@ const Dashboard = (props) => {
             <div className="z-10 relative flex flex-col justify-center items-center top-0 left-0 h-full w-16 bg-white">
                 <div className="mt-6 text-slate-200 space-y-8">
                 {menuItems.map((item) => (
-                    <div onClick={() => setState(item.state)} key={uuidv4()} className="w-full flex items-center justify-center hover:text-blue-600 group">
+                    <div onClick={() => {localStorage.setItem('middle', item.state);setStateChange(stateChange+1)}} key={uuidv4()} className="w-full flex items-center justify-center hover:text-blue-600 group">
                         <p className="absolute left-[85%] text-slate-600 shadow text-sm bg-slate-200 px-2 py-0.5 rounded-md hidden group-hover:block">{item.text}</p>
                         {item.icon}
                     </div>
@@ -64,9 +65,16 @@ const Dashboard = (props) => {
                 </div>
             </div>
             {/* State Box */}
-            <div className="fixed z-20 hidden items-center justify-center bg-slate-500 bg-opacity-60 top-0 left-0 h-full w-full">
-                <div className="w-[50%] h-[50%]">
-                    <Empty key={uuidv4()} state={'middle'} position={'middle'} stateChange={stateChange} setStateChange={(stateChange) => setStateChange(stateChange)} />
+            <div className={`fixed z-20 items-center justify-center bg-slate-500 bg-opacity-60 top-0 left-0 h-full w-full ${middle ? 'flex' : 'hidden'}`}>
+                <div className="w-[90%] h-[80%] md:w-[50%] md:h-[50%]">
+                <Switch condition={middle}>
+                        <Case value="user-add">
+                        <AddForm key={uuidv4()} position={'middle'} stateChange={stateChange} setStateChange={(stateChange) => setStateChange(stateChange)}/>
+                        </Case>
+                        <Default>
+                        <Empty key={uuidv4()} state={middle} position={'middle'} stateChange={stateChange} setStateChange={(stateChange) => setStateChange(stateChange)} />
+                        </Default>
+                    </Switch>
                 </div>
             </div>
             {/* Right Box */}
