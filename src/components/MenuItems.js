@@ -11,5 +11,4 @@ export const menuItems = [
         icon: <HiUserAdd className='text-2xl'/>,
         state: 'user-add',
     },
-
 ]
