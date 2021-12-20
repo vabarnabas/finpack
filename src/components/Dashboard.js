@@ -18,6 +18,8 @@ const Dashboard = (props) => {
     const [bottomLeft, setBottomLeft] = useState(localStorage.getItem('bottomLeft'));
     const [bottomRight, setBottomRight] = useState(localStorage.getItem('bottomRight'));
 
+    const [selfSearch, setSelfSearch] = useState(false);
+
     useEffect(() => {
         setTopLeft(localStorage.getItem('topLeft'));
         setTopRight(localStorage.getItem('topRight'));
@@ -62,7 +64,7 @@ const Dashboard = (props) => {
                 </div>
             </div>
             {/* State Box */}
-            <div className="absolute h-full w-full"></div>
+            <div className="absolute hidden h-full w-full"></div>
             {/* Right Box */}
             <div className="flex flex-col w-full">
             {/* Search Box */}
@@ -72,12 +74,12 @@ const Dashboard = (props) => {
                         <input placeholder='Keresés' type="text" className="bg-transparent outline-none text-sm text-slate-600 align-middle" />
                 </div>
             </div>
-            <div onClick={(e) => e.stopPropagation()} className="w-full h-full grid grid-cols-2 grid-rows-2 gap-2 p-2">
+            <div onClick={(e) => e.stopPropagation()} className="w-full h-full grid grid-cols-1 grid-rows-1 md:grid-cols-2 md:grid-rows-2 md:gap-2 p-2">
             {dashboardItems.map((item) => (
                 <div key={uuidv4()} className="">
                     <Switch condition={item.state}>
                         <Case value="user-add">
-                        <AddForm key={uuidv4()} state={item.state} position={item.position} stateChange={stateChange} setStateChange={(stateChange) => setStateChange(stateChange)} />
+                        <AddForm key={uuidv4()} state={item.state} position={item.position} stateChange={stateChange} setStateChange={(stateChange) => setStateChange(stateChange)}/>
                         </Case>
                         <Default>
                         <Empty key={uuidv4()} state={item.state} position={item.position} stateChange={stateChange} setStateChange={(stateChange) => setStateChange(stateChange)} />
