@@ -10,5 +10,5 @@ export const menuItems = [
         text: 'Hozzáadás',
         icon: <HiUserAdd className='text-2xl'/>,
         state: 'user-add',
-    },    
+    },
 ]
