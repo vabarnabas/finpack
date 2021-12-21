@@ -1,5 +1,4 @@
 import './App.css';
-import { useState } from 'react'
 import { initializeApp } from "firebase/app";
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { getAuth } from "firebase/auth";
@@ -26,7 +25,7 @@ function App() {
   const[user] = useAuthState(auth);
 
   return (
-    <div className="h-screen w-screen select-none overflow-hidden bg-slate-100">
+    <div className="h-screen w-screen select-none overflow-hidden bg-slate-100 dark:bg-gray-800">
       {user ? <Dashboard auth={auth} /> : <Login auth={auth} />}
     </div>
   );
