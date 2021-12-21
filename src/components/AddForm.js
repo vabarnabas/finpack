@@ -37,9 +37,9 @@ const AddForm = (props) => {
     return (
         <div onClick={() => setSelfSearch(false)} className='dashboard-card group'>
             <HiX onClick={() => {localStorage.removeItem(props.position);props.setStateChange(props.stateChange+1)}} className='absolute top-3 right-3 text-slate-500 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-600 text-lg block lg:hidden md:group-hover:block'/>
-            <form className=" flex flex-col items-center justify-center px-10">
-                <p className="text-slate-600 dark:text-slate-400 mb-3">Részletfizető Hozzáadása</p>
-                <div className=" grid grid-cols-1 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 place-content-center gap-4">
+            <form className="h-full w-full flex flex-col items-center justify-center px-10">
+                <p className="text-slate-600 dark:text-slate-400 mb-4 font-semibold text-sm md:text-base text-center">Részletfizető Hozzáadása</p>
+                <div className="w-full grid grid-cols-1 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-2 place-content-center gap-4">
                     <input value={userId} onChange={(e) => setUserId(e.target.value)} required placeholder='User ID*' type="text" className={`input-box`} />
                     <div className="relative flex items-center justify-center">
                         <p className="absolute right-3 text-slate-500 dark:text-slate-400">Ft</p>
@@ -62,12 +62,12 @@ const AddForm = (props) => {
                         </div> : ''}
                     </div>
                     <input value={comment} onChange={(e) => setComment(e.target.value)} placeholder='Komment' type="text" className={`input-box`} />
+                    <div className="flex items-center justify-center md:col-span-3 lg:col-span-2 xl:col-span-2">
+                    <input checked={check} onChange={() => setCheck(!check)} required type="checkbox" name="" id="check1" className="bg-gray-600 accent-blue-500" />
+                    <label htmlFor='check1'className='ml-2 text-xs text-slate-600 dark:text-slate-400'>Elfogadom, hogy helyesen adtam meg minden adatot.</label>
+                    </div>
+                    <button className="md:col-span-3 lg:col-span-2 xl:col-span-2 bg-blue-500 hover:bg-blue-600 text-white dark:text-slate-300 w-full rounded-full py-1">Leadás</button>
                 </div>
-                <div className="flex items-center justify-center mt-4">
-                <input checked={check} onChange={() => setCheck(!check)} required type="checkbox" name="" id="check1" className="bg-gray-600 accent-blue-500" />
-                <label htmlFor='check1'className='ml-2 text-xs text-slate-600 dark:text-slate-400'>Elfogadom, hogy helyesen adtam meg minden adatot.</label>
-                </div>
-                <button className="mt-4 bg-blue-500 hover:bg-blue-600 text-white dark:text-slate-300 w-full rounded-full py-1">Leadás</button>
             </form>
         </div>
     )

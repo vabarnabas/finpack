@@ -2,7 +2,7 @@ import React from 'react'
 import { useState, useEffect } from 'react'
 import { signOut } from "firebase/auth";
 import { v4 as uuidv4 } from 'uuid';
-import { HiLogin, HiSearch, HiIdentification } from 'react-icons/hi'
+import { HiLogin, HiSearch, HiIdentification, HiX } from 'react-icons/hi'
 import { menuItems } from './MenuItems';
 import Switch, { Case, Default } from 'react-switch-case';
 
@@ -11,13 +11,18 @@ import AddForm from './AddForm';
 
 const Dashboard = (props) => {
 
-    const [stateChange, setStateChange] = useState(0)
+    const [stateChange, setStateChange] = useState(0);
     const [topLeft, setTopLeft] = useState(localStorage.getItem('topLeft'));
     const [topRight, setTopRight] = useState(localStorage.getItem('topRight'));
     const [bottomLeft, setBottomLeft] = useState(localStorage.getItem('bottomLeft'));
     const [bottomRight, setBottomRight] = useState(localStorage.getItem('bottomRight'));
-    const [middle, setMiddle] = useState(localStorage.getItem('middle'))
+    const [middle, setMiddle] = useState(localStorage.getItem('middle'));
 
+    const [popup, setPopup] = useState(true);
+    const [popupText, setPopupText] = useState({
+        icon: '🎉',
+        message: 'Üdvözöl a Finpak x Limoverse!',
+    });
 
     useEffect(() => {
         setTopLeft(localStorage.getItem('topLeft'));
@@ -70,7 +75,7 @@ const Dashboard = (props) => {
                     </div>
                 </div>
             </div>
-            {/* State Box */}
+            {/* Middle Box */}
             <div className={`fixed z-20 items-center justify-center bg-slate-900 bg-opacity-60 top-0 left-0 h-full w-full ${middle ? 'flex' : 'hidden'}`}>
                 <div className="w-[90%] h-[80%] md:w-[50%] md:h-[55%] xl:w-[35%] xl:h-[40%]">
                 <Switch condition={middle}>
@@ -84,29 +89,34 @@ const Dashboard = (props) => {
                 </div>
             </div>
             {/* Right Box */}
-            <div className="flex flex-col w-full">
-            {/* Search Box */}
-            <div className="py-[26px] w-full">
-                <div className="flex items-center justify-start pl-4">
+            <div className="relative flex flex-col w-full">
+                {/* Top News Bar */}
+                {popup ?
+                <div className="absolute top-0 left-0 w-full h-12 flex items-center justify-center bg-slate-100 dark:bg-gray-800 shadow-md dark:shadow-lg text-slate-600 dark:text-slate-400">
+                    <HiX onClick={() => setPopup(false)} className='absolute right-6 text-slate-500 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-600'/>
+                    <p className="absolute left-4 sm:static text-xs sm:text-sm flex items-center justify-center"><span className="mr-3 hidden sm:block">{popupText.icon}</span>{popupText.message}</p>
+                </div> : ''}
+                {/* Search Box */}
+                <div className="py-[26px] w-full">
+                    <div className="flex items-center justify-start pl-4">
                         <HiSearch className='text-lg text-slate-600 dark:text-slate-500 mr-1.5'/>
                         <input placeholder='Keresés' type="text" className="bg-transparent outline-none text-sm text-slate-600 dark:text-slate-500 dark:placeholder:text-slate-500 align-middle" />
+                    </div>
                 </div>
-            </div>
-            <div onClick={(e) => e.stopPropagation()} className="w-full h-full grid grid-cols-1 grid-rows-1 md:grid-cols-2 md:grid-rows-2 md:gap-2 p-2">
-            {dashboardItems.map((item) => (
-                <div key={uuidv4()} className="hidden first:flex sm:flex">
-                    <Switch condition={item.state}>
-                        <Case value="user-add">
-                        <AddForm key={uuidv4()} state={item.state} position={item.position} stateChange={stateChange} setStateChange={(stateChange) => setStateChange(stateChange)}/>
-                        </Case>
-                        <Default>
-                        <Empty key={uuidv4()} state={item.state} position={item.position} stateChange={stateChange} setStateChange={(stateChange) => setStateChange(stateChange)} />
-                        </Default>
-                    </Switch>
+                <div onClick={(e) => e.stopPropagation()} className="w-full h-full grid grid-cols-1 grid-rows-1 md:grid-cols-2 md:grid-rows-2 md:gap-2 p-2">
+                {dashboardItems.map((item) => (
+                    <div key={uuidv4()} className="hidden first:flex sm:flex">
+                        <Switch condition={item.state}>
+                            <Case value="user-add">
+                            <AddForm key={uuidv4()} state={item.state} position={item.position} stateChange={stateChange} setStateChange={(stateChange) => setStateChange(stateChange)}/>
+                            </Case>
+                            <Default>
+                            <Empty key={uuidv4()} state={item.state} position={item.position} stateChange={stateChange} setStateChange={(stateChange) => setStateChange(stateChange)} />
+                            </Default>
+                        </Switch>
+                    </div>
+                ))}
                 </div>
-            ))}
-            </div>
-
             </div>
         </div>
     )
