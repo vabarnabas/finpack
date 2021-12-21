@@ -38,7 +38,7 @@ const AddForm = (props) => {
         <div onClick={() => setSelfSearch(false)} className='dashboard-card group'>
             <HiX onClick={() => {localStorage.removeItem(props.position);props.setStateChange(props.stateChange+1)}} className='absolute top-3 right-3 text-slate-500 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-600 text-lg block lg:hidden md:group-hover:block'/>
             <form className="h-full w-full flex flex-col items-center justify-center px-10">
-                <p className="text-slate-600 dark:text-slate-400 mb-4 font-semibold text-sm md:text-base lg:text-lg text-center">Részletfizető Hozzáadása</p>
+                <p className="text-slate-600 dark:text-slate-400 mb-4 font-semibold text-sm md:text-base lg:text-lg xl:text-xl text-center">Részletfizető Hozzáadása</p>
                 <div className="w-full grid grid-cols-1 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-2 place-content-center gap-4">
                     <input value={userId} onChange={(e) => setUserId(e.target.value)} required placeholder='User ID*' type="text" className={`input-box`} />
                     <div className="relative flex items-center justify-center">
