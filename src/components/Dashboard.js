@@ -65,8 +65,8 @@ const Dashboard = (props) => {
                 </div>
             </div>
             {/* State Box */}
-            <div className={`fixed z-20 items-center justify-center bg-slate-500 bg-opacity-60 top-0 left-0 h-full w-full ${middle ? 'flex' : 'hidden'}`}>
-                <div className="w-[90%] h-[80%] md:w-[50%] md:h-[50%]">
+            <div className={`fixed z-20 items-center justify-center bg-slate-900 bg-opacity-60 top-0 left-0 h-full w-full ${middle ? 'flex' : 'hidden'}`}>
+                <div className="w-[90%] h-[80%] md:w-[50%] md:h-[55%]">
                 <Switch condition={middle}>
                         <Case value="user-add">
                         <AddForm key={uuidv4()} position={'middle'} stateChange={stateChange} setStateChange={(stateChange) => setStateChange(stateChange)}/>

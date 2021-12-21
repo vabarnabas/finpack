@@ -39,7 +39,7 @@ const AddForm = (props) => {
             <HiX onClick={() => {localStorage.removeItem(props.position);props.setStateChange(props.stateChange+1)}} className='absolute top-3 right-3 text-slate-500 hover:text-slate-600 text-lg block lg:hidden md:group-hover:block'/>
             <form className="flex flex-col items-center justify-center px-6">
                 <p className="text-slate-600 mb-3">Részletfizető Hozzáadása</p>
-                <div className="grid grid-cols-1 md:grid-cols-2 grid-rows-6 md:grid-rows-3 place-content-center gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 place-content-center gap-4">
                     <input value={userId} onChange={(e) => setUserId(e.target.value)} required placeholder='User ID*' type="text" className={`w-full bg-stone-100 rounded-full px-4 py-1 focus:outline-none`} />
                     <div className="relative flex items-center justify-center">
                         <p className="absolute right-3 text-slate-500">Ft</p>
