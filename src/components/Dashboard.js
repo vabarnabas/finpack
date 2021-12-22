@@ -1,22 +1,30 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
-import { signOut } from "firebase/auth";
+//Packages
 import { v4 as uuidv4 } from 'uuid';
-import { HiLogin, HiSearch, HiIdentification, HiX } from 'react-icons/hi'
-import { menuItems } from './MenuItems';
+import { signOut } from "firebase/auth";
 import Switch, { Case, Default } from 'react-switch-case';
-
+//Icons & Design
+import { HiLogin, HiSearch, HiIdentification, HiX } from 'react-icons/hi'
+//Components
 import Empty from './Empty';
-import AddForm from './AddForm';
+import UserAdd from './UserAdd';
+import Profile from './Profile';
+//JSON
+import { menuItems } from './MenuItems';
 
 const Dashboard = (props) => {
+
+    document.title = 'Finpak - Dashboard'
+
+    const { auth, user, firestore } = props;
 
     const [stateChange, setStateChange] = useState(0);
     const [topLeft, setTopLeft] = useState(localStorage.getItem('topLeft'));
     const [topRight, setTopRight] = useState(localStorage.getItem('topRight'));
     const [bottomLeft, setBottomLeft] = useState(localStorage.getItem('bottomLeft'));
     const [bottomRight, setBottomRight] = useState(localStorage.getItem('bottomRight'));
-    const [middle, setMiddle] = useState(localStorage.getItem('middle'));
+    const [middle, setMiddle] = useState(sessionStorage.getItem('middle'));
 
     const [popup, setPopup] = useState(true);
     const [popupText, setPopupText] = useState({
@@ -29,7 +37,7 @@ const Dashboard = (props) => {
         setTopRight(localStorage.getItem('topRight'));
         setBottomLeft(localStorage.getItem('bottomLeft'));
         setBottomRight(localStorage.getItem('bottomRight'));
-        setMiddle(localStorage.getItem('middle'))
+        setMiddle(sessionStorage.getItem('middle'))
     },[stateChange])
 
     const dashboardItems = [
@@ -56,8 +64,8 @@ const Dashboard = (props) => {
             {/* Dashboard Nav */}
             <div className="z-10 relative flex flex-col justify-center items-center top-0 left-0 h-full w-16 bg-white dark:bg-gray-900">
                 <div className="mt-6 text-slate-200 dark:text-slate-700 space-y-6">
-                {menuItems.map((item) => (
-                    <div onClick={() => {localStorage.setItem('middle', item.state);setStateChange(stateChange+1)}} key={uuidv4()} className="w-full flex items-center justify-center hover:text-blue-600 group">
+                {menuItems.filter(item => item.show === true).map((item) => (
+                    <div onClick={() => {sessionStorage.setItem('middle', item.state);setStateChange(stateChange+1)}} key={uuidv4()} className="w-full flex items-center justify-center hover:text-blue-600 group">
                         <p className="absolute left-[85%] text-slate-600 dark:text-slate-400 shadow text-sm bg-slate-200 dark:bg-slate-800 px-3 py-0.5 rounded-md hidden group-hover:block">{item.text}</p>
                         {item.icon}
                     </div>
@@ -65,11 +73,11 @@ const Dashboard = (props) => {
                 </div>
                 {/* Lower Nav */}
                 <div className="mt-auto mb-6 space-y-6">
-                    <div onClick={() => signOut(props.auth)} key={uuidv4()} className="w-full flex items-center justify-center text-slate-200 dark:text-slate-700 hover:text-blue-600 group">
+                    <div onClick={() => {sessionStorage.setItem('middle', 'profile');setStateChange(stateChange+1)}} className="w-full flex items-center justify-center text-slate-200 dark:text-slate-700 hover:text-blue-600 group">
                             <p className="absolute left-[85%] text-slate-600 dark:text-slate-400 shadow text-sm bg-slate-200 dark:bg-slate-800 px-2 py-0.5 rounded-md hidden group-hover:block">Profilom</p>
                             <HiIdentification className='text-2xl'/>
                     </div>
-                    <div onClick={() => signOut(props.auth)} key={uuidv4()} className="w-full flex items-center justify-center text-slate-200 dark:text-slate-700 hover:text-blue-600 group">
+                    <div onClick={() => signOut(auth)} key={uuidv4()} className="w-full flex items-center justify-center text-slate-200 dark:text-slate-700 hover:text-blue-600 group">
                             <p className="absolute left-[85%] text-slate-600 dark:text-slate-400 shadow text-sm bg-slate-200 dark:bg-slate-800 px-2 py-0.5 rounded-md hidden group-hover:block">Kijelentkezés</p>
                             <HiLogin className='text-2xl'/>
                     </div>
@@ -77,10 +85,13 @@ const Dashboard = (props) => {
             </div>
             {/* Middle Box */}
             <div className={`fixed z-20 items-center justify-center bg-slate-900 bg-opacity-60 top-0 left-0 h-full w-full ${middle ? 'flex' : 'hidden'}`}>
-                <div className="w-[90%] h-[80%] md:w-[50%] md:h-[55%] xl:w-[35%] xl:h-[40%]">
+                <div className="w-[90%] md:w-[50%] xl:w-[35%] ">
                 <Switch condition={middle}>
                         <Case value="user-add">
-                        <AddForm key={uuidv4()} position={'middle'} stateChange={stateChange} setStateChange={(stateChange) => setStateChange(stateChange)}/>
+                        <UserAdd key={uuidv4()} firestore={firestore} user={user} position={'middle'} stateChange={stateChange} setStateChange={(stateChange) => setStateChange(stateChange)}/>
+                        </Case>
+                        <Case value="profile">
+                        <Profile key={uuidv4()} position={'middle'} stateChange={stateChange} setStateChange={(stateChange) => setStateChange(stateChange)}/>
                         </Case>
                         <Default>
                         <Empty key={uuidv4()} state={middle} position={'middle'} stateChange={stateChange} setStateChange={(stateChange) => setStateChange(stateChange)} />
@@ -108,7 +119,7 @@ const Dashboard = (props) => {
                     <div key={uuidv4()} className="hidden first:flex sm:flex">
                         <Switch condition={item.state}>
                             <Case value="user-add">
-                            <AddForm key={uuidv4()} state={item.state} position={item.position} stateChange={stateChange} setStateChange={(stateChange) => setStateChange(stateChange)}/>
+                            <UserAdd key={uuidv4()} firestore={firestore} user={user} state={item.state} position={item.position} stateChange={stateChange} setStateChange={(stateChange) => setStateChange(stateChange)}/>
                             </Case>
                             <Default>
                             <Empty key={uuidv4()} state={item.state} position={item.position} stateChange={stateChange} setStateChange={(stateChange) => setStateChange(stateChange)} />

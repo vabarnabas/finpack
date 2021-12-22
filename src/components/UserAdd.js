@@ -1,10 +1,13 @@
 import React from 'react'
 import { useState } from 'react'
+import { doc, setDoc, increment } from "firebase/firestore"; 
 import { v4 as uuidv4 } from 'uuid';
 import { HiX } from 'react-icons/hi'
 import plates from '../json/plates.json'
 
-const AddForm = (props) => {
+const UserAdd = (props) => {
+
+    const { firestore, user } = props;
 
     const [userId, setUserId] = useState('')
     const [price, setPrice] = useState('')
@@ -16,8 +19,6 @@ const AddForm = (props) => {
 
     const [plateList, setPlateList] = useState([])
     const [selfSearch, setSelfSearch] = useState(false);
-
-    console.log('selfSearch: ' + selfSearch + ' plate: ' + plate)
 
     const filterItems = (array, query) => {
         return array.filter(el => el.toLowerCase().indexOf(query.toLowerCase()) !== -1)
@@ -34,10 +35,45 @@ const AddForm = (props) => {
         setSelfSearch(false);
     }
 
+    const addZero = (i) => {
+        if (i < 10) {i = "0" + i}
+        return i;
+    }
+
+    const getCurrentDateTime = () => {
+        const date = new Date(Date.now());
+        return (date.getFullYear() + '.' + addZero(date.getMonth()) + '.' + addZero(date.getDate()) + ' ' + addZero(date.getHours()) + ':' + addZero(date.getMinutes()))
+    }
+
+    const addToDatabase = async (e) => {
+        e.preventDefault();
+        const currentDateTime = getCurrentDateTime()
+        await setDoc(doc(firestore, 'userDatabase', uuidv4()),{
+            userId: userId,
+            price: parseInt(price),
+            fee: parseInt(price),
+            tripId: tripId,
+            plate: plate,
+            comment: comment,
+            staff: user.email,
+            status: 'open',
+            statusMessage: 'Ticket megnyitva ' + currentDateTime + ' dátummal.',
+            priority: 'low',
+            timestamp: currentDateTime,
+        });
+        setUserId('');
+        setPrice('');
+        setFee('');
+        setTripId('');
+        setPlate('');
+        setComment('');
+        setCheck(false);
+    }
+
     return (
-        <div onClick={() => setSelfSearch(false)} className='dashboard-card group'>
-            <HiX onClick={() => {localStorage.removeItem(props.position);props.setStateChange(props.stateChange+1)}} className='absolute top-3 right-3 text-slate-500 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-600 text-lg block lg:hidden md:group-hover:block'/>
-            <form className="h-full w-full flex flex-col items-center justify-center px-10">
+        <div onClick={() => setSelfSearch(false)} className='dashboard-card'>
+            <HiX onClick={() => {localStorage.removeItem(props.position);sessionStorage.removeItem(props.position);props.setStateChange(props.stateChange+1)}} className='absolute top-3 right-3 text-slate-500 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-600 text-lg'/>
+            <form onSubmit={addToDatabase} className="h-full w-full flex flex-col items-center justify-center px-10">
                 <p className="text-slate-600 dark:text-slate-400 mb-4 font-semibold text-sm md:text-base lg:text-lg xl:text-xl text-center">Részletfizető Hozzáadása</p>
                 <div className="w-full grid grid-cols-1 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-2 place-content-center gap-4">
                     <input value={userId} onChange={(e) => setUserId(e.target.value)} required placeholder='User ID*' type="text" className={`input-box`} />
@@ -63,7 +99,7 @@ const AddForm = (props) => {
                     </div>
                     <input value={comment} onChange={(e) => setComment(e.target.value)} placeholder='Komment' type="text" className={`input-box`} />
                     <div className="flex items-center justify-center md:col-span-3 lg:col-span-2 xl:col-span-2">
-                    <input checked={check} onChange={() => setCheck(!check)} required type="checkbox" name="" id="check1" className="bg-gray-600 accent-blue-500" />
+                    <input required checked={check} onChange={() => setCheck(!check)} required type="checkbox" name="" id="check1" className="bg-gray-600 accent-blue-500" />
                     <label htmlFor='check1'className='ml-2 text-xs text-slate-600 dark:text-slate-400'>Elfogadom, hogy helyesen adtam meg minden adatot.</label>
                     </div>
                     <button className="md:col-span-3 lg:col-span-2 xl:col-span-2 bg-blue-500 hover:bg-blue-600 text-white dark:text-slate-300 w-full rounded-full py-1">Leadás</button>
@@ -73,4 +109,4 @@ const AddForm = (props) => {
     )
 }
 
-export default AddForm
+export default UserAdd

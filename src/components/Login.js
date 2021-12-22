@@ -5,13 +5,17 @@ import { SiFirebase } from 'react-icons/si'
 
 const Login = (props) => {
 
+    document.title = 'Finpak - Login'
+
+    const { auth } = props;
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
 
     const onSignIn = (e) => {
         e.preventDefault();
-        signInWithEmailAndPassword(props.auth, email, password)
+        signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
             // Signed in 
             

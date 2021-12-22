@@ -3,6 +3,7 @@ import { initializeApp } from "firebase/app";
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { getAuth } from "firebase/auth";
 import {initializeFirestore} from 'firebase/firestore'; 
+import { getFirestore } from 'firebase/firestore'
 
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
@@ -23,10 +24,12 @@ initializeFirestore(app, {experimentalForceLongPolling: true});
 function App() {
 
   const[user] = useAuthState(auth);
+  const firestore = getFirestore(app);
+
 
   return (
     <div className="h-screen w-screen select-none overflow-hidden bg-slate-100 dark:bg-gray-800">
-      {user ? <Dashboard auth={auth} /> : <Login auth={auth} />}
+      {user ? <Dashboard auth={auth} firestore={firestore} user={user} /> : <Login auth={auth} />}
     </div>
   );
 }

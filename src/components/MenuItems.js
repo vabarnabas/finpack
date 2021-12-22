@@ -5,10 +5,21 @@ export const menuItems = [
         text: 'Adatbázis',
         icon: <HiServer className='text-2xl'/>,
         state: 'database',
+        placeable: true,
+        show: false,
     },
     {
         text: 'Hozzáadás',
         icon: <HiUserAdd className='text-2xl'/>,
         state: 'user-add',
+        placeable: true,
+        show: true,
+    },
+    {
+        text: 'Profilom',
+        icon: null,
+        state: 'profile',
+        placeable: false,
+        show: false,
     },
 ]
