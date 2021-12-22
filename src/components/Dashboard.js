@@ -10,6 +10,7 @@ import { HiLogin, HiSearch, HiIdentification, HiX } from 'react-icons/hi'
 import Empty from './Empty';
 import UserAdd from './UserAdd';
 import Profile from './Profile';
+import UserDatabase from './UserDatabase';
 //JSON
 import { menuItems } from './MenuItems';
 
@@ -63,7 +64,7 @@ const Dashboard = (props) => {
         <div className='h-full w-full flex'>
             {/* Dashboard Nav */}
             <div className="z-10 relative flex flex-col justify-center items-center top-0 left-0 h-full w-16 bg-white dark:bg-gray-900">
-                <div className="mt-6 text-slate-200 dark:text-slate-700 space-y-6">
+                <div className="mt-6 text-slate-300 dark:text-slate-700 space-y-6">
                 {menuItems.filter(item => item.show === true).map((item) => (
                     <div onClick={() => {sessionStorage.setItem('middle', item.state);setStateChange(stateChange+1)}} key={uuidv4()} className="w-full flex items-center justify-center hover:text-blue-600 group">
                         <p className="absolute left-[85%] text-slate-600 dark:text-slate-400 shadow text-sm bg-slate-200 dark:bg-slate-800 px-3 py-0.5 rounded-md hidden group-hover:block">{item.text}</p>
@@ -73,11 +74,11 @@ const Dashboard = (props) => {
                 </div>
                 {/* Lower Nav */}
                 <div className="mt-auto mb-6 space-y-6">
-                    <div onClick={() => {sessionStorage.setItem('middle', 'profile');setStateChange(stateChange+1)}} className="w-full flex items-center justify-center text-slate-200 dark:text-slate-700 hover:text-blue-600 group">
+                    <div onClick={() => {sessionStorage.setItem('middle', 'profile');setStateChange(stateChange+1)}} className="w-full flex items-center justify-center text-slate-300 dark:text-slate-700 hover:text-blue-600 group">
                             <p className="absolute left-[85%] text-slate-600 dark:text-slate-400 shadow text-sm bg-slate-200 dark:bg-slate-800 px-2 py-0.5 rounded-md hidden group-hover:block">Profilom</p>
                             <HiIdentification className='text-2xl'/>
                     </div>
-                    <div onClick={() => signOut(auth)} key={uuidv4()} className="w-full flex items-center justify-center text-slate-200 dark:text-slate-700 hover:text-blue-600 group">
+                    <div onClick={() => signOut(auth)} key={uuidv4()} className="w-full flex items-center justify-center text-slate-300 dark:text-slate-700 hover:text-blue-600 group">
                             <p className="absolute left-[85%] text-slate-600 dark:text-slate-400 shadow text-sm bg-slate-200 dark:bg-slate-800 px-2 py-0.5 rounded-md hidden group-hover:block">Kijelentkezés</p>
                             <HiLogin className='text-2xl'/>
                     </div>
@@ -85,16 +86,19 @@ const Dashboard = (props) => {
             </div>
             {/* Middle Box */}
             <div className={`fixed z-20 items-center justify-center bg-slate-900 bg-opacity-60 top-0 left-0 h-full w-full ${middle ? 'flex' : 'hidden'}`}>
-                <div className="w-[90%] md:w-[50%] xl:w-[35%] ">
+                <div className="w-[90%] h-[80%] md:w-[50%] md:h-[55%] xl:w-[35%] xl:h-[45%]">
                 <Switch condition={middle}>
                         <Case value="user-add">
-                        <UserAdd key={uuidv4()} firestore={firestore} user={user} position={'middle'} stateChange={stateChange} setStateChange={(stateChange) => setStateChange(stateChange)}/>
+                            <UserAdd key={uuidv4()} firestore={firestore} user={user} position={'middle'} stateChange={stateChange} setStateChange={(stateChange) => setStateChange(stateChange)} />
                         </Case>
                         <Case value="profile">
-                        <Profile key={uuidv4()} position={'middle'} stateChange={stateChange} setStateChange={(stateChange) => setStateChange(stateChange)}/>
+                            <Profile key={uuidv4()} position={'middle'} stateChange={stateChange} setStateChange={(stateChange) => setStateChange(stateChange)}/>
+                        </Case>
+                        <Case value="database">
+                            <UserDatabase key={uuidv4()} firestore={firestore} user={user} position={'middle'} stateChange={stateChange} setStateChange={(stateChange) => setStateChange(stateChange)} />
                         </Case>
                         <Default>
-                        <Empty key={uuidv4()} state={middle} position={'middle'} stateChange={stateChange} setStateChange={(stateChange) => setStateChange(stateChange)} />
+                            <Empty key={uuidv4()} state={middle} position={'middle'} stateChange={stateChange} setStateChange={(stateChange) => setStateChange(stateChange)} />
                         </Default>
                     </Switch>
                 </div>
@@ -119,10 +123,13 @@ const Dashboard = (props) => {
                     <div key={uuidv4()} className="hidden first:flex sm:flex">
                         <Switch condition={item.state}>
                             <Case value="user-add">
-                            <UserAdd key={uuidv4()} firestore={firestore} user={user} state={item.state} position={item.position} stateChange={stateChange} setStateChange={(stateChange) => setStateChange(stateChange)}/>
+                                <UserAdd key={uuidv4()} firestore={firestore} user={user} state={item.state} position={item.position} stateChange={stateChange} setStateChange={(stateChange) => setStateChange(stateChange)}/>
+                            </Case>
+                            <Case value="database">
+                                <UserDatabase key={uuidv4()} firestore={firestore} user={user} position={item.position} stateChange={stateChange} setStateChange={(stateChange) => setStateChange(stateChange)}/>
                             </Case>
                             <Default>
-                            <Empty key={uuidv4()} state={item.state} position={item.position} stateChange={stateChange} setStateChange={(stateChange) => setStateChange(stateChange)} />
+                                <Empty key={uuidv4()} state={item.state} position={item.position} stateChange={stateChange} setStateChange={(stateChange) => setStateChange(stateChange)} />
                             </Default>
                         </Switch>
                     </div>

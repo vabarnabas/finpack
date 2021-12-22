@@ -2,11 +2,11 @@ import { HiServer, HiUserAdd } from 'react-icons/hi'
 
 export const menuItems = [
     {
-        text: 'Adatbázis',
+        text: 'User Adatbázis',
         icon: <HiServer className='text-2xl'/>,
         state: 'database',
         placeable: true,
-        show: false,
+        show: true,
     },
     {
         text: 'Hozzáadás',

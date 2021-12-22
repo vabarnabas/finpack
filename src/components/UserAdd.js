@@ -42,7 +42,7 @@ const UserAdd = (props) => {
 
     const getCurrentDateTime = () => {
         const date = new Date(Date.now());
-        return (date.getFullYear() + '.' + addZero(date.getMonth()) + '.' + addZero(date.getDate()) + ' ' + addZero(date.getHours()) + ':' + addZero(date.getMinutes()))
+        return (date.getFullYear() + '.' + addZero(date.getMonth()) + '.' + addZero(date.getDate()) + '. ' + addZero(date.getHours()) + ':' + addZero(date.getMinutes()))
     }
 
     const addToDatabase = async (e) => {
