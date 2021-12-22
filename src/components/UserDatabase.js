@@ -63,12 +63,12 @@ const UserDatabase = (props) => {
                 </div>
                 <div className="w-full grid gap-y-2 py-10">
                     {itemList.map(item => (
-                        <div key={uuidv4()} className="px-2 rounded-lg grid lg:grid-cols-3 grid-rows-2 gap-x-2 py-1.5 hover:bg-slate-300 dark:hover:bg-gray-600">
-                            <p className={`row-start-1 col-start-1 self-center font-semibold text-center text-xs text-slate-200 dark:text-slate-300 py-0.5 px-2 rounded-full max-w-max ${item.status === 'open' ? 'bg-emerald-500' : 'bg-pink-500'}`}>{item.status.toUpperCase()}</p>
-                            <p className={`row-start-2 col-start-1 self-center font-semibold text-center text-xs text-slate-200 dark:text-slate-300 py-0.5 px-2 rounded-full max-w-max ${item.priority === 'low' ? 'bg-emerald-500' : (item.priority === 'medium' ? 'bg-blue-500' : 'bg-pink-500')}`}>{item.priority.toUpperCase()}</p>
-                            <p className="row-start-1 col-start-2 self-center font-bold text-slate-600 dark:text-slate-400">{item.plate}</p>
-                            <p className="row-start-1 col-start-3 col-span-1 text-sm self-center text-slate-600 dark:text-slate-400">{formatNumber(item.price + item.fee) + ' Ft'}</p>
-                            <p className="row-start-2 col-start-2 col-span-2 self-center text-sm text-slate-600 dark:text-slate-400">{item.staff}</p>
+                        <div key={uuidv4()} className="px-2 rounded-lg grid md:grid-cols-3 grid-rows-2 gap-x-2 py-1.5 hover:bg-slate-300 dark:hover:bg-gray-600">
+                            <p className={`md:row-start-1 md:col-start-1 self-center font-semibold text-center text-xs text-slate-200 dark:text-slate-300 py-0.5 px-2 rounded-full max-w-max ${item.status === 'open' ? 'bg-emerald-500' : 'bg-pink-500'}`}>{item.status.toUpperCase()}</p>
+                            <p className={`md:row-start-2 md:col-start-1 self-center font-semibold text-center text-xs text-slate-200 dark:text-slate-300 py-0.5 px-2 rounded-full max-w-max ${item.priority === 'low' ? 'bg-emerald-500' : (item.priority === 'medium' ? 'bg-blue-500' : 'bg-pink-500')}`}>{item.priority.toUpperCase()}</p>
+                            <p className="md:row-start-1 md:col-start-2 self-center font-bold text-slate-600 dark:text-slate-400">{item.plate}</p>
+                            <p className="md:row-start-1 md:col-start-3 col-span-1 text-sm self-center text-slate-600 dark:text-slate-400">{formatNumber(item.price + item.fee) + ' Ft'}</p>
+                            <p className="md:row-start-2 md:col-start-2 col-span-2 self-center text-sm text-slate-600 dark:text-slate-400">{item.staff}</p>
                         </div>
                     ))}
                 </div>
