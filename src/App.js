@@ -1,9 +1,12 @@
 import './App.css';
+import { useState, useEffect } from 'react'
 import { initializeApp } from "firebase/app";
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { getAuth } from "firebase/auth";
-import {initializeFirestore} from 'firebase/firestore'; 
+import { initializeFirestore } from 'firebase/firestore'; 
 import { getFirestore } from 'firebase/firestore'
+
+import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
@@ -25,11 +28,17 @@ function App() {
 
   const[user] = useAuthState(auth);
   const firestore = getFirestore(app);
+  const [isReady, setIsReady] = useState(false);
 
+  useEffect(() => {
+    setInterval(() => {
+      setIsReady(true);
+    },600)
+  },[])
 
   return (
     <div className="h-screen w-screen select-none overflow-hidden bg-slate-100 dark:bg-gray-800">
-      {user ? <Dashboard auth={auth} firestore={firestore} user={user} /> : <Login auth={auth} />}
+      {isReady ? (user ? <Dashboard auth={auth} firestore={firestore} user={user} /> : <Login auth={auth} />) : <div className="h-full w-full flex items-center justify-center"><AiOutlineLoading3Quarters className='animate-spin text-6xl text-slate-500'/></div>}
     </div>
   );
 }
