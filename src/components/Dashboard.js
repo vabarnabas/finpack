@@ -11,6 +11,7 @@ import Empty from './Empty';
 import UserAdd from './UserAdd';
 import Profile from './Profile';
 import UserDatabase from './UserDatabase';
+import Charge from './Charge';
 //JSON
 import { menuItems } from './MenuItems';
 
@@ -97,6 +98,9 @@ const Dashboard = (props) => {
                         <Case value="database">
                             <UserDatabase key={uuidv4()} firestore={firestore} user={user} position={'middle'} stateChange={stateChange} setStateChange={(stateChange) => setStateChange(stateChange)} />
                         </Case>
+                        <Case value="charge">
+                            <Charge key={uuidv4()} firestore={firestore} user={user} position={'middle'} stateChange={stateChange} setStateChange={(stateChange) => setStateChange(stateChange)} />
+                        </Case>
                         <Default>
                             <Empty key={uuidv4()} state={middle} position={'middle'} stateChange={stateChange} setStateChange={(stateChange) => setStateChange(stateChange)} />
                         </Default>
@@ -127,6 +131,9 @@ const Dashboard = (props) => {
                             </Case>
                             <Case value="database">
                                 <UserDatabase key={uuidv4()} firestore={firestore} user={user} position={item.position} stateChange={stateChange} setStateChange={(stateChange) => setStateChange(stateChange)}/>
+                            </Case>
+                            <Case value="charge">
+                                <Charge key={uuidv4()} firestore={firestore} user={user} position={item.position} stateChange={stateChange} setStateChange={(stateChange) => setStateChange(stateChange)}/>
                             </Case>
                             <Default>
                                 <Empty key={uuidv4()} state={item.state} position={item.position} stateChange={stateChange} setStateChange={(stateChange) => setStateChange(stateChange)} />

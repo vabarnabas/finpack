@@ -6,10 +6,9 @@ import { getAuth } from "firebase/auth";
 import { initializeFirestore } from 'firebase/firestore'; 
 import { getFirestore } from 'firebase/firestore'
 
-import { AiOutlineLoading3Quarters } from 'react-icons/ai'
-
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
+import Loader from './components/Loader';
 
 const firebaseConfig = {
   apiKey: "AIzaSyBmMdqmGDNJToWv-i69IejXuwxZAXkrMc0",
@@ -38,7 +37,7 @@ function App() {
 
   return (
     <div className="h-screen w-screen select-none overflow-hidden bg-slate-100 dark:bg-gray-800">
-      {isReady ? (user ? <Dashboard auth={auth} firestore={firestore} user={user} /> : <Login auth={auth} />) : <div className="h-full w-full flex items-center justify-center"><AiOutlineLoading3Quarters className='animate-spin text-6xl text-slate-500'/></div>}
+      {isReady ? (user ? <Dashboard auth={auth} firestore={firestore} user={user} /> : <Login auth={auth} />) : <Loader />}
     </div>
   );
 }

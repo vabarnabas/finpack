@@ -1,4 +1,5 @@
 import { HiServer, HiUserAdd } from 'react-icons/hi'
+import { MdLocalGasStation } from 'react-icons/md'
 
 export const menuItems = [
     {
@@ -12,6 +13,13 @@ export const menuItems = [
         text: 'Hozzáadás',
         icon: <HiUserAdd className='text-2xl'/>,
         state: 'user-add',
+        placeable: true,
+        show: true,
+    },
+    {
+        text: 'Töltés, Tankolás',
+        icon: <MdLocalGasStation className='text-2xl'/>,
+        state: 'charge',
         placeable: true,
         show: true,
     },

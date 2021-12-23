@@ -80,11 +80,11 @@ const UserAdd = (props) => {
                 <div className="w-full grid grid-cols-1 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-2 place-content-center gap-x-4 gap-y-3 xl:gap-y-4">
                     <input value={userId} onChange={(e) => setUserId(e.target.value)} required placeholder='User ID*' type="text" className={`input-box`} />
                     <div className="relative flex items-center justify-center">
-                        <p className="absolute right-3 text-slate-500 dark:text-slate-400">Ft</p>
+                        <p className="absolute right-3 text-slate-500 dark:text-slate-400 text-sm">Ft</p>
                         <input value={price} onChange={(e) => {setPrice(e.target.value)}} required placeholder='Összeg*' type="number" className={`input-box pr-8`} />
                     </div>
                     <div className="relative flex items-center justify-center">
-                        <p className="absolute right-3 text-slate-500 dark:text-slate-400">Ft</p>
+                        <p className="absolute right-3 text-slate-500 dark:text-slate-400 text-sm">Ft</p>
                         <input value={fee} onChange={(e) => setFee(e.target.value)} required placeholder='Eljárási díj*' type="number" className={`input-box pr-8`} />
                     </div>
                     <input value={tripId} onChange={(e) => setTripId(e.target.value)} placeholder='Trip ID' type="text" className={`input-box`} />
@@ -101,7 +101,7 @@ const UserAdd = (props) => {
                     </div>
                     <input value={comment} onChange={(e) => setComment(e.target.value)} placeholder='Komment' type="text" className={`input-box`} />
                     <div className="flex items-center justify-center md:col-span-3 lg:col-span-2 xl:col-span-2">
-                    <input required checked={check} onChange={() => setCheck(!check)} required type="checkbox" name="" id="check1" className="bg-gray-600 accent-blue-500" />
+                    <input required checked={check} onChange={() => setCheck(!check)} type="checkbox" name="" id="check1" className="bg-gray-600 accent-blue-500" />
                     <label htmlFor='check1'className='ml-2 text-xs text-slate-600 dark:text-slate-400'>Elfogadom, hogy helyesen adtam meg minden adatot.</label>
                     </div>
                     <button className="md:col-span-3 lg:col-span-2 xl:col-span-2 bg-blue-500 hover:bg-blue-600 text-sm text-white dark:text-slate-300 w-full rounded-full py-1">Leadás</button>

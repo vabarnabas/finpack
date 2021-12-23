@@ -23,6 +23,7 @@ const UserDatabase = (props) => {
             priority: 'low',
             staff: 'dev@finpak.app',
             statusMessage: 'Ticket megnyitva 2021.11.22. 15:05 dátummal.',
+            timestamp: '2021.11.12. 23:51',
         },
         {
             id: uuidv4(),
@@ -36,6 +37,7 @@ const UserDatabase = (props) => {
             priority: 'medium',
             staff: 'dev@finpak.app',
             statusMessage: 'Ticket megnyitva 2021.11.22. 15:05 dátummal.',
+            timestamp: '2021.11.12. 23:51',
         },
         {
             id: uuidv4(),
@@ -49,6 +51,7 @@ const UserDatabase = (props) => {
             priority: 'urgent',
             staff: 'dev@finpak.app',
             statusMessage: 'Ticket megnyitva 2021.11.22. 15:05 dátummal.',
+            timestamp: '2021.11.12. 23:51',
         },
     ]
 
@@ -97,14 +100,14 @@ const UserDatabase = (props) => {
                     <RiArrowRightSFill className='text-2xl text-slate-500 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-600' />
                 </div>
                 {view === 'list' ?
-                    <div className="w-full grid gap-y-2">
+                    <div className="w-full grid lg:grid-cols-2 gap-2">
                         {itemList.map(item => (
-                            <div key={uuidv4()} className="px-2 rounded-lg grid grid-cols-6 md:grid-cols-3 grid-rows-2 gap-x-2 py-1.5 hover:bg-slate-300 dark:hover:bg-gray-600">
-                                <p className={`row-start-1 col-start-1 col-span-2 md:col-span-1 self-center font-semibold text-center text-xs text-slate-200 dark:text-slate-300 py-0.5 px-2 rounded-full max-w-max ${item.status === 'open' ? 'bg-emerald-500' : 'bg-pink-500'}`}>{item.status.toUpperCase()}</p>
-                                <p className={`row-start-2 col-start-1 col-span-2 md:col-span-1 self-center font-semibold text-center text-xs text-slate-200 dark:text-slate-300 py-0.5 px-2 rounded-full max-w-max ${item.priority === 'low' ? 'bg-emerald-500' : (item.priority === 'medium' ? 'bg-blue-500' : 'bg-pink-500')}`}>{item.priority.toUpperCase()}</p>
-                                <p className="md:row-start-1 md:col-start-2 col-span-2 md:col-span-1 self-center font-bold text-slate-600 dark:text-slate-400">{item.plate}</p>
-                                <p className="md:row-start-1 col-start-5 md:col-start-3 col-span-2 text-xs self-center text-slate-600 dark:text-slate-400">{formatNumber(item.price + item.fee) + ' Ft'}</p>
-                                <p className="md:row-start-2 md:col-start-2 md:col-span-2 col-span-4 self-center text-sm text-slate-600 dark:text-slate-400">{item.staff}</p>
+                            <div key={uuidv4()} className="px-2 rounded-lg grid grid-rows-2 grid-cols-3 gap-1 py-1.5 hover:bg-slate-300 dark:hover:bg-gray-600">
+                                <p className={`row-start-1 col-start-1 self-center font-semibold text-center text-xs text-slate-200 dark:text-slate-300 py-0.5 px-2 rounded-full max-w-max ${item.status === 'open' ? 'bg-emerald-500' : 'bg-pink-500'}`}>{item.status.toUpperCase()}</p>
+                                <p className={`row-start-2 col-start-1 self-center font-semibold text-center text-xs text-slate-200 dark:text-slate-300 py-0.5 px-2 rounded-full max-w-max ${item.priority === 'low' ? 'bg-emerald-500' : (item.priority === 'medium' ? 'bg-blue-500' : 'bg-pink-500')}`}>{item.priority.toUpperCase()}</p>
+                                <p className="row-start-1 col-start-2 self-center text-slate-500 dark:text-slate-400 font-bold">{item.plate}</p>
+                                <p className="row-start-2 col-start-2 self-center text-slate-500 dark:text-slate-400 text-xs">{formatNumber(item.price + item.fee) + ' Ft'}</p>
+                                <p className="row-start-1 col-start-3 row-span-2 self-center text-slate-500 dark:text-slate-400 text-xs">{item.timestamp}</p>
                             </div>
                         ))}
                     </div> : 
