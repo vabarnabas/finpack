@@ -58,8 +58,9 @@ const UserDatabase = (props) => {
 
     return (
         <div onClick={() => setFilter(false)} className='dashboard-card'>
-            <div className="absolute top-3 right-3 flex items-center justify-center space-x-2">
-                <div className="relative">
+            <div className="absolute w-full top-3 px-3 flex items-center justify-center">
+                <p className="text-xs font-semibold mr-auto text-slate-500 pl-2">ADATBÁZIS</p>
+                <div className="relative ml-auto flex justify-center items-center space-x-2">
                     <HiFilter onClick={(e) => {e.stopPropagation();setFilter(!filter)}} className='text-slate-500 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-600'/>
                     {filter ?
                     <div onClick={(e) => e.stopPropagation()} className="absolute w-max top-[110%] right-0 py-2 rounded-lg bg-slate-200 dark:bg-gray-700 shadow shadow-slate-300 dark:shadow-gray-800 overflow-y-scroll scrollbar-hide">
@@ -86,17 +87,17 @@ const UserDatabase = (props) => {
                         </div>
                     </div> : ''
                     }
-                </div>
                 <HiX onClick={() => {localStorage.removeItem(props.position);sessionStorage.removeItem(props.position);props.setStateChange(props.stateChange+1)}} className='text-slate-500 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-600 text-lg'/>
+                </div>
             </div>
-            <div className="h-full w-full flex items-center justify-center px-4">
+            <div className="h-full w-full flex items-center justify-center px-4 py-10">
                 <div className="absolute bottom-2 flex items-center justify-center">
                     <RiArrowLeftSFill className='text-2xl text-slate-500 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-600' />
                     <p className="text-sm text-slate-500 dark:text-slate-500">{currentPage}</p>
                     <RiArrowRightSFill className='text-2xl text-slate-500 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-600' />
                 </div>
                 {view === 'list' ?
-                    <div className="w-full grid gap-y-2 py-10">
+                    <div className="w-full grid gap-y-2">
                         {itemList.map(item => (
                             <div key={uuidv4()} className="px-2 rounded-lg grid grid-cols-6 md:grid-cols-3 grid-rows-2 gap-x-2 py-1.5 hover:bg-slate-300 dark:hover:bg-gray-600">
                                 <p className={`row-start-1 col-start-1 col-span-2 md:col-span-1 self-center font-semibold text-center text-xs text-slate-200 dark:text-slate-300 py-0.5 px-2 rounded-full max-w-max ${item.status === 'open' ? 'bg-emerald-500' : 'bg-pink-500'}`}>{item.status.toUpperCase()}</p>
@@ -108,7 +109,6 @@ const UserDatabase = (props) => {
                         ))}
                     </div> : 
                     <div className="w-full flex flex-col items-center justify-center">
-
                     </div>
                 }
             </div>
