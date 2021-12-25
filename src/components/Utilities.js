@@ -1,11 +1,10 @@
 import { doc, setDoc, increment } from "firebase/firestore"; 
 
-export const addZero = (number) => {
-    if (number < 10) {number = "0" + number}
-    return number;
-}
-
 export const getCurrentDateTime = () => {
+    const addZero = (number) => {
+        if (number < 10) {number = "0" + number}
+        return number;
+    }
     const date = new Date(Date.now());
     return (date.getFullYear() + '.' + addZero(date.getMonth()) + '.' + addZero(date.getDate()) + '. ' + addZero(date.getHours()) + ':' + addZero(date.getMinutes()))
 }

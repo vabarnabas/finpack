@@ -2,7 +2,7 @@ import React from 'react'
 import { useState } from 'react'
 import { doc, setDoc, increment } from "firebase/firestore"; 
 import { v4 as uuidv4 } from 'uuid';
-import { getCurrentDateTime, filterItems } from './Utilities';
+import { getCurrentDateTime, filterItems, onSearchQuery, onSearchClick } from './Utilities';
 import { HiX } from 'react-icons/hi'
 import plates from '../json/plates.json'
 
@@ -20,17 +20,6 @@ const UserAdd = (props) => {
 
     const [plateList, setPlateList] = useState([])
     const [selfSearch, setSelfSearch] = useState(false);
-
-    const searchPlate = (arg1) => {
-        setPlate(arg1)
-        setPlateList(filterItems(plates, arg1));
-        setSelfSearch(true);
-    }
-
-    const searchClick = (arg1) => {
-        setPlate(arg1);
-        setSelfSearch(false);
-    }
 
     const addToDatabase = async (e) => {
         e.preventDefault();
@@ -76,11 +65,11 @@ const UserAdd = (props) => {
                     </div>
                     <input value={tripId} onChange={(e) => setTripId(e.target.value)} placeholder='Trip ID' type="text" className={`input-box`} />
                     <div onClick={(e) => e.stopPropagation()}  className="relative flex items-center justify-center">
-                        <input onFocus={() => setSelfSearch(true)} value={plate} onChange={(e) => searchPlate(e.target.value.trim().replace('-','').toUpperCase().substring(0,6))} placeholder='Rendszám' type="text" className={`input-box`} />
+                        <input onFocus={() => setSelfSearch(true)} value={plate} onChange={(e) => onSearchQuery(e.target.value.trim().replace('-','').toUpperCase().substring(0,6), (plate) => setPlate(plate), plates, (plateList) => setPlateList(plateList), (selfSearch) => setSelfSearch(selfSearch))} placeholder='Rendszám' type="text" className={`input-box`} />
                         {(plate !== '' && selfSearch) ? 
                         <div className="w-full absolute top-[105%] rounded-lg max-h-24 bg-slate-200 dark:bg-gray-700 shadow shadow-slate-300 dark:shadow-gray-800 overflow-y-scroll scrollbar-hide">
                             {plateList.map((plate) => (
-                                <div onClick={() => searchClick(plate)} key={uuidv4()} className="px-1 flex items-center hover:bg-slate-300 dark:hover:bg-gray-600 text-slate-600 dark:text-slate-400">
+                                <div onClick={() => onSearchClick(plate, (plate) => setPlate(plate), (selfSearch) => setSelfSearch(selfSearch))} key={uuidv4()} className="px-1 flex items-center hover:bg-slate-300 dark:hover:bg-gray-600 text-slate-600 dark:text-slate-400">
                                     <p className="py-2 px-3 text-left text-xs">{plate}</p>
                                 </div>
                             ))}

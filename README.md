@@ -17,3 +17,9 @@ The variables `topLeft`, `topRight`, `bottomLeft`, `bottomRight` and `middle` *(
 Also `stateChange` *(number)* is used as a counter for triggering re-renders of the dashboard elements.
 
 While `popup` *(boolean)* is what's controlling the top popup element of the dashboard and `popupText` *(object {icon, message})* is what is displayed in the said element.
+
+### Utility Functions
+
+Utility functions are stored in the **Utilities.js** file.
+
+`addZero` is a small utility function which is used, for date formatting. Such as in `getCurrentDateTime` which formats the native js Date, to a string of the desired date format.
