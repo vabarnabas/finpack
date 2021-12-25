@@ -2,6 +2,7 @@ import React from 'react'
 import { useState } from 'react'
 import { doc, setDoc, increment } from "firebase/firestore"; 
 import { v4 as uuidv4 } from 'uuid';
+import { getCurrentDateTime, filterItems } from './Utilities';
 import { HiX } from 'react-icons/hi'
 import plates from '../json/plates.json'
 
@@ -20,10 +21,6 @@ const UserAdd = (props) => {
     const [plateList, setPlateList] = useState([])
     const [selfSearch, setSelfSearch] = useState(false);
 
-    const filterItems = (array, query) => {
-        return array.filter(el => el.toLowerCase().indexOf(query.toLowerCase()) !== -1)
-    }
-
     const searchPlate = (arg1) => {
         setPlate(arg1)
         setPlateList(filterItems(plates, arg1));
@@ -33,16 +30,6 @@ const UserAdd = (props) => {
     const searchClick = (arg1) => {
         setPlate(arg1);
         setSelfSearch(false);
-    }
-
-    const addZero = (i) => {
-        if (i < 10) {i = "0" + i}
-        return i;
-    }
-
-    const getCurrentDateTime = () => {
-        const date = new Date(Date.now());
-        return (date.getFullYear() + '.' + addZero(date.getMonth()) + '.' + addZero(date.getDate()) + '. ' + addZero(date.getHours()) + ':' + addZero(date.getMinutes()))
     }
 
     const addToDatabase = async (e) => {

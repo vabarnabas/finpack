@@ -87,7 +87,7 @@ const Dashboard = (props) => {
             </div>
             {/* Middle Box */}
             <div className={`fixed z-20 items-center justify-center bg-slate-900 bg-opacity-60 top-0 left-0 h-full w-full ${middle ? 'flex' : 'hidden'}`}>
-                <div className="w-[90%] h-[80%] md:w-[50%] md:h-[55%] xl:w-[35%] xl:h-[45%]">
+                <div className="w-[90%] h-[80%] md:w-[55%] md:h-[55%] xl:w-[40%] xl:h-[45%]">
                 <Switch condition={middle}>
                         <Case value="user-add">
                             <UserAdd key={uuidv4()} firestore={firestore} user={user} position={'middle'} stateChange={stateChange} setStateChange={(stateChange) => setStateChange(stateChange)} />

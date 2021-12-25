@@ -1,6 +1,7 @@
 import React from 'react'
 import { useState } from 'react'
 import { v4 as uuidv4 } from 'uuid';
+import { formatNumber } from './Utilities'
 import { HiX, HiFilter } from 'react-icons/hi'
 import { RiArrowLeftSFill, RiArrowRightSFill } from 'react-icons/ri'
 
@@ -53,11 +54,49 @@ const UserDatabase = (props) => {
             statusMessage: 'Ticket megnyitva 2021.11.22. 15:05 dátummal.',
             timestamp: '2021.11.12. 23:51',
         },
+        {
+            id: uuidv4(),
+            userId: uuidv4(),
+            price: 10000,
+            fee: 5000,
+            tripId: uuidv4(),
+            plate: 'SAA421',
+            comment: '',
+            status: 'open',
+            priority: 'urgent',
+            staff: 'dev@finpak.app',
+            statusMessage: 'Ticket megnyitva 2021.11.22. 15:05 dátummal.',
+            timestamp: '2021.11.12. 23:51',
+        },
+        {
+            id: uuidv4(),
+            userId: uuidv4(),
+            price: 10000,
+            fee: 5000,
+            tripId: uuidv4(),
+            plate: 'SAA421',
+            comment: '',
+            status: 'open',
+            priority: 'urgent',
+            staff: 'dev@finpak.app',
+            statusMessage: 'Ticket megnyitva 2021.11.22. 15:05 dátummal.',
+            timestamp: '2021.11.12. 23:51',
+        },
+        {
+            id: uuidv4(),
+            userId: uuidv4(),
+            price: 10000,
+            fee: 5000,
+            tripId: uuidv4(),
+            plate: 'SAA421',
+            comment: '',
+            status: 'open',
+            priority: 'urgent',
+            staff: 'dev@finpak.app',
+            statusMessage: 'Ticket megnyitva 2021.11.22. 15:05 dátummal.',
+            timestamp: '2021.11.12. 23:51',
+        },
     ]
-
-    const formatNumber = (x) => {
-        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-    }
 
     return (
         <div onClick={() => setFilter(false)} className='dashboard-card'>

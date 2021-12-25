@@ -1,6 +1,7 @@
 import React from 'react'
 import { useState } from 'react'
 import { v4 as uuidv4 } from 'uuid';
+import { filterItems, onSearchQuery, onSearchClick } from './Utilities';
 import { HiX, HiClock, HiFolder, HiLightningBolt } from 'react-icons/hi'
 import { MdLocalGasStation } from 'react-icons/md'
 
@@ -20,21 +21,6 @@ const Charge = (props) => {
     const [selfSearch, setSelfSearch] = useState(false);
 
     const places = (isPlugee ? MOLPlugee : MOLRefuel)
-
-    const filterItems = (array, query) => {
-        return array.filter(el => el.toLowerCase().indexOf(query.toLowerCase()) !== -1)
-    }
-
-    const searchPlace = (arg1) => {
-        setPlace(arg1)
-        setPlaceList(filterItems(places, arg1));
-        setSelfSearch(true);
-    }
-
-    const searchClick = (arg1) => {
-        setPlace(arg1);
-        setSelfSearch(false);
-    }
 
     return (
         <div className='dashboard-card'>
@@ -62,12 +48,12 @@ const Charge = (props) => {
                     </div>
                     <button onClick={(e) => {e.preventDefault();setIsPlugee(!isPlugee)}} className="w-full bg-blue-500 hover:bg-blue-600 text-sm text-white dark:text-slate-300 rounded-full py-1">{typeText}</button>
                     <div onClick={(e) => e.stopPropagation()}  className="relative flex items-center justify-center">
-                        <input onFocus={() => setSelfSearch(true)} value={place} onChange={(e) => searchPlace(e.target.value)} placeholder='Rendszám' type="text" className={`input-box`} />
+                        <input onFocus={() => setSelfSearch(true)} value={place} onChange={(e) => onSearchQuery(e.target.value, (place) => setPlace(place), places, (placeList) => setPlaceList(placeList), (selfSearch) => setSelfSearch(selfSearch))} placeholder='Helyszín' type="text" className={`input-box`} />
                         {(place !== '' && selfSearch) ? 
-                        <div className="w-full absolute top-[105%] rounded-lg max-h-24 bg-slate-200 dark:bg-gray-700 shadow shadow-slate-300 dark:shadow-gray-800 overflow-y-scroll scrollbar-hide">
-                            {placeList.map((plate) => (
-                                <div onClick={() => searchClick(plate)} key={uuidv4()} className="px-1 flex items-center hover:bg-slate-300 dark:hover:bg-gray-600 text-slate-600 dark:text-slate-400">
-                                    <p className="py-2 px-3 text-left text-xs">{plate}</p>
+                        <div className="z-20 w-full absolute top-[105%] rounded-lg max-h-24 bg-slate-200 dark:bg-gray-700 shadow shadow-slate-300 dark:shadow-gray-800 overflow-y-scroll scrollbar-hide">
+                            {placeList.map((place) => (
+                                <div onClick={() => onSearchClick(place, (place) => setPlace(place), (selfSearch) => setSelfSearch(selfSearch))} key={uuidv4()} className="px-1 flex items-center hover:bg-slate-300 dark:hover:bg-gray-600 text-slate-600 dark:text-slate-400">
+                                    <p className="py-2 px-3 text-left text-xs">{place}</p>
                                 </div>
                             ))}
                         </div> : ''}
