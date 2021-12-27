@@ -1,7 +1,6 @@
-import React from 'react'
-import { useState } from 'react'
+import React, { useState, useEffect }  from 'react'
 import { v4 as uuidv4 } from 'uuid';
-import { onSearchQuery, onSearchClick, getCurrentDateTime } from './Utilities';
+import { onSearchQuery, onSearchClick, getCurrentDateTime, writeDataToDatabase } from './Utilities';
 import { HiX, HiClock, HiFolder, HiLightningBolt } from 'react-icons/hi'
 import { MdLocalGasStation } from 'react-icons/md'
 
@@ -12,6 +11,11 @@ import Loader from './Loader';
 
 const Charge = (props) => {
 
+    const { firestore, user } = props;
+
+    const [view, setView] = useState('list');
+
+    const [stateChange, setStateChange] = useState(0);
     const [tripId, setTripId] = useState('');
     const [price, setPrice] = useState('');
     const [chargeStart, setChargeStart] = useState('');
@@ -28,6 +32,33 @@ const Charge = (props) => {
 
     const places = (isPlugee ? MOLPlugee : MOLRefuel)
 
+    useEffect(() => {
+        setTripId('');
+        setPrice('');
+        setChargeStart('');
+        setChargeEnd('');
+        setPlace('');
+        setAutonomyStart('');
+        setAutonomyEnd('');
+    },[stateChange])
+
+    const onFormSubmit = (e) => {
+        e.preventDefault();
+        writeDataToDatabase(firestore, 'charges', {
+            tripId: tripId,
+            price: parseInt(price),
+            chargeStart: chargeStart,
+            chargeEnd: chargeEnd,
+            place: place,
+            autonomyStart: autonomyStart,
+            autonomyEnd: autonomyEnd,
+            staff: user.email,
+            status: 'open',
+            statusMessage: (isPlugee ? 'Töltés' : 'Tankolás') + ' létehozva ' + getCurrentDateTime() + ' dátummal.',
+            timestamp: getCurrentDateTime(),
+        }, stateChange, (stateChange) => setStateChange(stateChange))
+    }
+
     return (
         <div className='dashboard-card'>
             <div className="absolute w-full top-3 px-3 flex items-center justify-center">
@@ -37,7 +68,7 @@ const Charge = (props) => {
                 <HiX onClick={() => {localStorage.removeItem(props.position);sessionStorage.removeItem(props.position);props.setStateChange(props.stateChange+1)}} className='cursor-pointer ml-auto text-slate-500 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-600 text-lg'/>
                 </div>
             </div>
-            <form className="py-10 px-4 h-full w-full flex flex-col items-center justify-center">
+            <form onSubmit={onFormSubmit} className="py-10 px-4 h-full w-full flex flex-col items-center justify-center">
                 <div className="w-full grid grid-cols-1 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-2 place-content-center gap-x-4 gap-y-3 xl:gap-y-4">
                     <input value={tripId} onChange={(e) => setTripId(e.target.value)} required placeholder='Trip ID*' type="text" className={`input-box`} />
                     <div className="relative flex items-center justify-center">

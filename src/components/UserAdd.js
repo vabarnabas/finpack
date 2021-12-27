@@ -9,18 +9,16 @@ const UserAdd = (props) => {
 
     const { firestore, user } = props;
 
+    const [stateChange, setStateChange] = useState(0);
     const [userId, setUserId] = useState('');
     const [price, setPrice] = useState('');
     const [fee, setFee] = useState('');
     const [tripId, setTripId] = useState('');
     const [plate, setPlate] = useState('');
     const [comment, setComment] = useState('');
-    const [check, setCheck] = useState(false);
 
     const [plateList, setPlateList] = useState([]);
     const [selfSearch, setSelfSearch] = useState(false);
-
-    const [stateChange, setStateChange] = useState(0);
 
     useEffect(() => {
         setUserId('');
@@ -29,7 +27,6 @@ const UserAdd = (props) => {
         setTripId('');
         setPlate('');
         setComment('');
-        setCheck(false);
     },[stateChange]);
 
     const onFormSubmit = (e) => {
@@ -79,10 +76,6 @@ const UserAdd = (props) => {
                         </div> : ''}
                     </div>
                     <input value={comment} onChange={(e) => setComment(e.target.value)} placeholder='Komment' type="text" className={`input-box`} />
-                    <div className="flex items-center justify-center md:col-span-3 lg:col-span-2 xl:col-span-2">
-                    <input required checked={check} onChange={() => setCheck(!check)} type="checkbox" name="" id="check1" className="bg-gray-600 accent-blue-500" />
-                    <label htmlFor='check1'className='ml-2 text-xs text-slate-600 dark:text-slate-400'>Elfogadom, hogy helyesen adtam meg minden adatot.</label>
-                    </div>
                     <button className="md:col-span-3 lg:col-span-2 xl:col-span-2 bg-blue-500 hover:bg-blue-600 text-sm text-white dark:text-slate-300 w-full rounded-full py-1">Leadás</button>
                 </div>
             </form>
