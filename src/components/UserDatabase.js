@@ -134,7 +134,7 @@ const UserDatabase = (props) => {
             <div className="h-full w-full flex items-center justify-center px-4 py-10">
                 <div className="absolute bottom-2 flex items-center justify-center">
                     <RiArrowLeftSFill className='text-2xl text-slate-500 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-600' />
-                    <p className="text-sm text-slate-500 dark:text-slate-500">{currentPage}</p>
+                    <p className="text-sm text-slate-500 dark:text-slate-500">{currentPage+1}</p>
                     <RiArrowRightSFill className='text-2xl text-slate-500 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-600' />
                 </div>
                 {view === 'list' ?

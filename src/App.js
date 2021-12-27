@@ -1,10 +1,10 @@
-import './App.css';
 import { useState, useEffect } from 'react'
 import { initializeApp } from "firebase/app";
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { getAuth } from "firebase/auth";
 import { initializeFirestore } from 'firebase/firestore'; 
 import { getFirestore } from 'firebase/firestore'
+import { getStaffData } from './components/Utilities';
 
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
@@ -30,7 +30,7 @@ function App() {
   const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
-    setInterval(() => {
+    setTimeout(() => {
       setIsReady(true);
     },600)
   },[])

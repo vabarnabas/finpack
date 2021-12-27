@@ -1,19 +1,20 @@
 import React, { useState, useEffect }  from 'react'
 import { v4 as uuidv4 } from 'uuid';
-import { onSearchQuery, onSearchClick, getCurrentDateTime, writeDataToDatabase } from './Utilities';
-import { HiX, HiClock, HiFolder, HiLightningBolt } from 'react-icons/hi'
+import { onSearchQuery, onSearchClick, getCurrentDateTime, getIfJSON, writeDataToDatabase, getPagedDataFromDatabase } from './Utilities';
+import { HiX, HiClock, HiLightningBolt, HiCode, HiClipboardList, HiCollection } from 'react-icons/hi'
 import { MdLocalGasStation } from 'react-icons/md'
+import { RiArrowLeftSFill, RiArrowRightSFill } from 'react-icons/ri'
 
 import MOLRefuel from '../json/refuel.json'
 import MOLPlugee from '../json/charge.json'
-
-import Loader from './Loader';
 
 const Charge = (props) => {
 
     const { firestore, user } = props;
 
-    const [view, setView] = useState('list');
+    const [view, setView] = useState('main');
+    const [code, setCode] = useState('');
+    const [showCode, setShowCode] = useState(false);
 
     const [stateChange, setStateChange] = useState(0);
     const [tripId, setTripId] = useState('');
@@ -30,6 +31,9 @@ const Charge = (props) => {
     const [placeList, setPlaceList] = useState([])
     const [selfSearch, setSelfSearch] = useState(false);
 
+    const [currentPage, setCurrentPage] = useState(0);
+    const [responseData, setResponseData] = useState([]);
+
     const places = (isPlugee ? MOLPlugee : MOLRefuel)
 
     useEffect(() => {
@@ -42,6 +46,10 @@ const Charge = (props) => {
         setAutonomyEnd('');
     },[stateChange])
 
+    useEffect(() => {
+        getPagedDataFromDatabase(firestore, 'charges', currentPage, 3).then(data => setResponseData(data))
+    },[firestore, currentPage])
+
     const onFormSubmit = (e) => {
         e.preventDefault();
         writeDataToDatabase(firestore, 'charges', {
@@ -49,9 +57,10 @@ const Charge = (props) => {
             price: parseInt(price),
             chargeStart: chargeStart,
             chargeEnd: chargeEnd,
+            type: (isPlugee ? 'Töltés' : 'Tankolás'),
             place: place,
-            autonomyStart: autonomyStart,
-            autonomyEnd: autonomyEnd,
+            autonomyStart: parseInt(autonomyStart),
+            autonomyEnd: parseInt(autonomyEnd),
             staff: user.email,
             status: 'open',
             statusMessage: (isPlugee ? 'Töltés' : 'Tankolás') + ' létehozva ' + getCurrentDateTime() + ' dátummal.',
@@ -59,15 +68,47 @@ const Charge = (props) => {
         }, stateChange, (stateChange) => setStateChange(stateChange))
     }
 
+    const onJSONLoad = (e) => {
+        e.preventDefault();
+        const object = getIfJSON(code) && JSON.parse(code);
+        if (object?.version === 'legacy') {
+            setTripId(object?.tripId);
+            setPrice(parseInt(object?.price));
+            setChargeStart(object?.chargeStart);
+            setChargeEnd(object?.chargeEnd);
+            setIsPlugee(object?.type === 'Kút' ? false : true);
+            setPlace(object?.place);
+            setAutonomyStart(parseInt(object?.autonomyStart));
+            setAutonomyEnd(parseInt(object?.autonomyEnd));
+        }
+        setCode('');
+        setShowCode(false);
+    }
+
     return (
-        <div className='dashboard-card'>
+        <div onClick={() => {setSelfSearch(false);setShowCode(false)}} className='dashboard-card'>
             <div className="absolute w-full top-3 px-3 flex items-center justify-center">
                 <p className="text-xs font-semibold mr-auto text-slate-500 pl-2">TÖLTÉS, TANKOLÁS</p>
                 <div className="relative ml-auto flex justify-center items-center space-x-2">
-                <HiFolder className='cursor-pointer text-slate-500 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-600'/>
-                <HiX onClick={() => {localStorage.removeItem(props.position);sessionStorage.removeItem(props.position);props.setStateChange(props.stateChange+1)}} className='cursor-pointer ml-auto text-slate-500 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-600 text-lg'/>
+                    {view === 'main' ?
+                        <HiCollection onClick={() => setView('list')} className='cursor-pointer text-slate-500 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-600'/> :
+                        <HiClipboardList onClick={() => setView('main')} className='cursor-pointer text-slate-500 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-600'/>
+                    }
+                    <HiCode onClick={(e) => {e.stopPropagation();setSelfSearch(false);setShowCode(!showCode)}} className='text-slate-500 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-600'/>
+                    {showCode ?
+                        <div onClick={(e) => {e.stopPropagation();setSelfSearch(false)}} className="z-10 absolute w-max top-[110%] right-0 py-2 rounded-lg bg-slate-200 dark:bg-gray-700 shadow shadow-slate-300 dark:shadow-gray-800 overflow-y-scroll scrollbar-hide">
+                            <form onSubmit={onJSONLoad} className="relative grid gap-y-3 place-items-center px-4 py-2">
+                                <div className="grid grid-cols-2 text-slate-600 dark:text-slate-400">
+                                    <input value={code} onChange={(e) => setCode(e.target.value)} type="text" placeholder="Kód" className="input-box text-xs col-span-2" />
+                                </div>
+                                <button className="text-xs bg-blue-500 hover:bg-blue-600 text-white dark:text-slate-300 w-full rounded-full py-1">Betöltés</button>
+                            </form>
+                        </div> : ''
+                    }
+                    <HiX onClick={() => {localStorage.removeItem(props.position);sessionStorage.removeItem(props.position);props.setStateChange(props.stateChange+1)}} className='cursor-pointer ml-auto text-slate-500 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-600 text-lg'/>
                 </div>
             </div>
+            {view === 'main' ?
             <form onSubmit={onFormSubmit} className="py-10 px-4 h-full w-full flex flex-col items-center justify-center">
                 <div className="w-full grid grid-cols-1 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-2 place-content-center gap-x-4 gap-y-3 xl:gap-y-4">
                     <input value={tripId} onChange={(e) => setTripId(e.target.value)} required placeholder='Trip ID*' type="text" className={`input-box`} />
@@ -107,7 +148,23 @@ const Charge = (props) => {
                         <button className="w-full bg-blue-500 hover:bg-blue-600 text-sm text-white dark:text-slate-300 rounded-full py-1">Leadás</button>
                     </div>
                 </div>
-            </form>
+            </form> :''}
+            {view === 'list' ? 
+            <div className="py-10 px-4 h-full w-full flex flex-col items-center justify-center">
+                <div className="w-full grid lg:grid-cols-2 gap-2">
+                    {responseData.map((item) => (
+                        <div className="">
+                            {/* TODO: Need to finnish */}
+                        </div>
+                    ))}
+                </div>
+            </div> : ''}
+            {view === 'list' ?
+            <div className="absolute bottom-2 flex items-center justify-center">
+                <RiArrowLeftSFill className='text-2xl text-slate-500 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-600' />
+                <p className="text-sm text-slate-500 dark:text-slate-500">{currentPage+1}</p>
+                <RiArrowRightSFill className='text-2xl text-slate-500 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-600' />
+            </div> : ''}
         </div>
     )
 }

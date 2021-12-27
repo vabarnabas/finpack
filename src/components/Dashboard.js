@@ -5,11 +5,11 @@ import { v4 as uuidv4 } from 'uuid';
 import { signOut } from "firebase/auth";
 import Switch, { Case, Default } from 'react-switch-case';
 //Icons & Design
-import { HiLogin, HiSearch, HiIdentification, HiX } from 'react-icons/hi'
+import { HiLogin, HiSearch, HiIdentification, HiX, HiCog } from 'react-icons/hi'
 //Components
 import Empty from './Empty';
 import UserAdd from './UserAdd';
-import Profile from './Profile';
+import Settings from './Settings';
 import UserDatabase from './UserDatabase';
 import Charge from './Charge';
 //JSON
@@ -20,6 +20,7 @@ const Dashboard = (props) => {
     document.title = 'Finpak - Dashboard'
 
     const { auth, user, firestore } = props;
+
 
     const [stateChange, setStateChange] = useState(0);
     const [topLeft, setTopLeft] = useState(localStorage.getItem('topLeft'));
@@ -76,8 +77,8 @@ const Dashboard = (props) => {
                 {/* Lower Nav */}
                 <div className="mt-auto mb-6 space-y-6">
                     <div onClick={() => {sessionStorage.setItem('middle', 'profile');setStateChange(stateChange+1)}} className="w-full flex items-center justify-center text-slate-300 dark:text-slate-700 hover:text-blue-600 group">
-                            <p className="absolute left-[85%] text-slate-600 dark:text-slate-400 shadow text-sm bg-slate-200 dark:bg-slate-800 px-2 py-0.5 rounded-md hidden group-hover:block">Profilom</p>
-                            <HiIdentification className='text-2xl'/>
+                            <p className="absolute left-[85%] text-slate-600 dark:text-slate-400 shadow text-sm bg-slate-200 dark:bg-slate-800 px-2 py-0.5 rounded-md hidden group-hover:block">Beállítások</p>
+                            <HiCog className='text-2xl'/>
                     </div>
                     <div onClick={() => signOut(auth)} key={uuidv4()} className="w-full flex items-center justify-center text-slate-300 dark:text-slate-700 hover:text-blue-600 group">
                             <p className="absolute left-[85%] text-slate-600 dark:text-slate-400 shadow text-sm bg-slate-200 dark:bg-slate-800 px-2 py-0.5 rounded-md hidden group-hover:block">Kijelentkezés</p>
@@ -86,14 +87,14 @@ const Dashboard = (props) => {
                 </div>
             </div>
             {/* Middle Box */}
-            <div className={`fixed z-20 items-center justify-center bg-slate-900 bg-opacity-60 top-0 left-0 h-full w-full ${middle ? 'flex' : 'hidden'}`}>
+            <div className={`fixed z-30 items-center justify-center bg-slate-900 bg-opacity-60 top-0 left-0 h-full w-full ${middle ? 'flex' : 'hidden'}`}>
                 <div className="w-[90%] h-[80%] md:w-[55%] md:h-[55%] xl:w-[40%] xl:h-[45%]">
                 <Switch condition={middle}>
                         <Case value="user-add">
                             <UserAdd key={uuidv4()} firestore={firestore} user={user} position={'middle'} stateChange={stateChange} setStateChange={(stateChange) => setStateChange(stateChange)} />
                         </Case>
                         <Case value="profile">
-                            <Profile key={uuidv4()} position={'middle'} stateChange={stateChange} setStateChange={(stateChange) => setStateChange(stateChange)}/>
+                            <Settings key={uuidv4()} position={'middle'} stateChange={stateChange} setStateChange={(stateChange) => setStateChange(stateChange)}/>
                         </Case>
                         <Case value="database">
                             <UserDatabase key={uuidv4()} firestore={firestore} user={user} position={'middle'} stateChange={stateChange} setStateChange={(stateChange) => setStateChange(stateChange)} />

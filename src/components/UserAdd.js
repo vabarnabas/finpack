@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import { doc, setDoc } from "firebase/firestore"; 
 import { v4 as uuidv4 } from 'uuid';
 import { getCurrentDateTime, onSearchQuery, onSearchClick, writeDataToDatabase } from './Utilities';
 import { HiX } from 'react-icons/hi'
@@ -28,7 +27,7 @@ const UserAdd = (props) => {
         setPlate('');
         setComment('');
     },[stateChange]);
-
+    
     const onFormSubmit = (e) => {
         e.preventDefault();
         writeDataToDatabase(firestore, 'userDatabase', {
@@ -53,7 +52,7 @@ const UserAdd = (props) => {
                 <HiX onClick={() => {localStorage.removeItem(props.position);sessionStorage.removeItem(props.position);props.setStateChange(props.stateChange+1)}} className='cursor-pointer ml-auto text-slate-500 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-600 text-lg'/>
             </div>
             <form onSubmit={onFormSubmit} className="py-10 px-4 h-full w-full flex flex-col items-center justify-center">
-                <div className="w-full grid grid-cols-1 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-2 place-content-center gap-x-4 gap-y-3 xl:gap-y-4">
+                <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 place-content-center gap-x-4 gap-y-3 xl:gap-y-4">
                     <input value={userId} onChange={(e) => setUserId(e.target.value)} required placeholder='User ID*' type="text" className={`input-box`} />
                     <div className="relative flex items-center justify-center">
                         <p className="absolute right-3 text-slate-500 dark:text-slate-400 text-sm">Ft</p>
@@ -76,7 +75,7 @@ const UserAdd = (props) => {
                         </div> : ''}
                     </div>
                     <input value={comment} onChange={(e) => setComment(e.target.value)} placeholder='Komment' type="text" className={`input-box`} />
-                    <button className="md:col-span-3 lg:col-span-2 xl:col-span-2 bg-blue-500 hover:bg-blue-600 text-sm text-white dark:text-slate-300 w-full rounded-full py-1">Leadás</button>
+                    <button className="md:col-span-2 bg-blue-500 hover:bg-blue-600 text-sm text-white dark:text-slate-300 w-full rounded-full py-1">Leadás</button>
                 </div>
             </form>
         </div>
