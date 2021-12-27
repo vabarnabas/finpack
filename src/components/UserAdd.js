@@ -1,8 +1,7 @@
-import React from 'react'
-import { useState } from 'react'
-import { doc, setDoc, increment } from "firebase/firestore"; 
+import React, { useState, useEffect } from 'react'
+import { doc, setDoc } from "firebase/firestore"; 
 import { v4 as uuidv4 } from 'uuid';
-import { getCurrentDateTime, filterItems, onSearchQuery, onSearchClick } from './Utilities';
+import { getCurrentDateTime, onSearchQuery, onSearchClick, writeDataToDatabase } from './Utilities';
 import { HiX } from 'react-icons/hi'
 import plates from '../json/plates.json'
 
@@ -10,21 +9,32 @@ const UserAdd = (props) => {
 
     const { firestore, user } = props;
 
-    const [userId, setUserId] = useState('')
-    const [price, setPrice] = useState('')
-    const [fee, setFee] = useState('')
-    const [tripId, setTripId] = useState('')
-    const [plate, setPlate] = useState('')
-    const [comment, setComment] = useState('')
-    const [check, setCheck] = useState(false)
+    const [userId, setUserId] = useState('');
+    const [price, setPrice] = useState('');
+    const [fee, setFee] = useState('');
+    const [tripId, setTripId] = useState('');
+    const [plate, setPlate] = useState('');
+    const [comment, setComment] = useState('');
+    const [check, setCheck] = useState(false);
 
-    const [plateList, setPlateList] = useState([])
+    const [plateList, setPlateList] = useState([]);
     const [selfSearch, setSelfSearch] = useState(false);
 
-    const addToDatabase = async (e) => {
+    const [stateChange, setStateChange] = useState(0);
+
+    useEffect(() => {
+        setUserId('');
+        setPrice('');
+        setFee('');
+        setTripId('');
+        setPlate('');
+        setComment('');
+        setCheck(false);
+    },[stateChange]);
+
+    const onFormSubmit = (e) => {
         e.preventDefault();
-        const currentDateTime = getCurrentDateTime()
-        await setDoc(doc(firestore, 'userDatabase', uuidv4()),{
+        writeDataToDatabase(firestore, 'userDatabase', {
             userId: userId,
             price: parseInt(price),
             fee: parseInt(price),
@@ -33,26 +43,19 @@ const UserAdd = (props) => {
             comment: comment,
             staff: user.email,
             status: 'open',
-            statusMessage: 'Ticket megnyitva ' + currentDateTime + ' dátummal.',
+            statusMessage: 'Ticket megnyitva ' + getCurrentDateTime() + ' dátummal.',
             priority: 'low',
-            timestamp: currentDateTime,
-        });
-        setUserId('');
-        setPrice('');
-        setFee('');
-        setTripId('');
-        setPlate('');
-        setComment('');
-        setCheck(false);
+            timestamp: getCurrentDateTime(),
+        }, stateChange, (stateChange) => setStateChange(stateChange))
     }
 
     return (
         <div onClick={() => setSelfSearch(false)} className='dashboard-card'>
             <div className="absolute w-full top-3 px-3 flex items-center justify-center">
                 <p className="text-xs font-semibold mr-auto text-slate-500 pl-2">RÉSZLETFIZETŐ HOZZÁADÁSA</p>
-                <HiX onClick={() => {localStorage.removeItem(props.position);sessionStorage.removeItem(props.position);props.setStateChange(props.stateChange+1)}} className='ml-auto text-slate-500 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-600 text-lg'/>
+                <HiX onClick={() => {localStorage.removeItem(props.position);sessionStorage.removeItem(props.position);props.setStateChange(props.stateChange+1)}} className='cursor-pointer ml-auto text-slate-500 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-600 text-lg'/>
             </div>
-            <form onSubmit={addToDatabase} className="py-10 px-4 h-full w-full flex flex-col items-center justify-center">
+            <form onSubmit={onFormSubmit} className="py-10 px-4 h-full w-full flex flex-col items-center justify-center">
                 <div className="w-full grid grid-cols-1 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-2 place-content-center gap-x-4 gap-y-3 xl:gap-y-4">
                     <input value={userId} onChange={(e) => setUserId(e.target.value)} required placeholder='User ID*' type="text" className={`input-box`} />
                     <div className="relative flex items-center justify-center">

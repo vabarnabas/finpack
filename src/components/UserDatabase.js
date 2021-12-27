@@ -1,7 +1,6 @@
-import React from 'react'
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { v4 as uuidv4 } from 'uuid';
-import { formatNumber } from './Utilities'
+import { getFormattedNumber } from './Utilities'
 import { HiX, HiFilter } from 'react-icons/hi'
 import { RiArrowLeftSFill, RiArrowRightSFill } from 'react-icons/ri'
 
@@ -103,7 +102,7 @@ const UserDatabase = (props) => {
             <div className="absolute w-full top-3 px-3 flex items-center justify-center">
                 <p className="text-xs font-semibold mr-auto text-slate-500 pl-2">ADATBÁZIS</p>
                 <div className="relative ml-auto flex justify-center items-center space-x-2">
-                    <HiFilter onClick={(e) => {e.stopPropagation();setFilter(!filter)}} className='text-slate-500 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-600'/>
+                    <HiFilter onClick={(e) => {e.stopPropagation();setFilter(!filter)}} className='cursor-pointer text-slate-500 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-600'/>
                     {filter ?
                     <div onClick={(e) => e.stopPropagation()} className="absolute w-max top-[110%] right-0 py-2 rounded-lg bg-slate-200 dark:bg-gray-700 shadow shadow-slate-300 dark:shadow-gray-800 overflow-y-scroll scrollbar-hide">
                         <div className="relative grid gap-y-3 place-items-center px-4 py-2">
@@ -129,7 +128,7 @@ const UserDatabase = (props) => {
                         </div>
                     </div> : ''
                     }
-                <HiX onClick={() => {localStorage.removeItem(props.position);sessionStorage.removeItem(props.position);props.setStateChange(props.stateChange+1)}} className='text-slate-500 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-600 text-lg'/>
+                <HiX onClick={() => {localStorage.removeItem(props.position);sessionStorage.removeItem(props.position);props.setStateChange(props.stateChange+1)}} className='cursor-pointer text-slate-500 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-600 text-lg'/>
                 </div>
             </div>
             <div className="h-full w-full flex items-center justify-center px-4 py-10">
@@ -145,7 +144,7 @@ const UserDatabase = (props) => {
                                 <p className={`row-start-1 col-start-1 self-center font-semibold text-center text-xs text-slate-200 dark:text-slate-300 py-0.5 px-2 rounded-full max-w-max ${item.status === 'open' ? 'bg-emerald-500' : 'bg-pink-500'}`}>{item.status.toUpperCase()}</p>
                                 <p className={`row-start-2 col-start-1 self-center font-semibold text-center text-xs text-slate-200 dark:text-slate-300 py-0.5 px-2 rounded-full max-w-max ${item.priority === 'low' ? 'bg-emerald-500' : (item.priority === 'medium' ? 'bg-blue-500' : 'bg-pink-500')}`}>{item.priority.toUpperCase()}</p>
                                 <p className="row-start-1 col-start-2 self-center text-slate-500 dark:text-slate-400 font-bold">{item.plate}</p>
-                                <p className="row-start-2 col-start-2 self-center text-slate-500 dark:text-slate-400 text-xs">{formatNumber(item.price + item.fee) + ' Ft'}</p>
+                                <p className="row-start-2 col-start-2 self-center text-slate-500 dark:text-slate-400 text-xs">{getFormattedNumber(item.price + item.fee) + ' Ft'}</p>
                                 <p className="row-start-1 col-start-3 row-span-2 self-center text-slate-500 dark:text-slate-400 text-xs">{item.timestamp}</p>
                             </div>
                         ))}
