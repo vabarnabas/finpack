@@ -1,17 +1,18 @@
 import React from 'react'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 //Packages
 import { v4 as uuidv4 } from 'uuid';
 import { signOut } from "firebase/auth";
 import Switch, { Case, Default } from 'react-switch-case';
 //Icons & Design
-import { HiLogin, HiSearch, HiIdentification, HiX, HiCog } from 'react-icons/hi'
+import { HiLogin, HiSearch, HiX, HiCog } from 'react-icons/hi'
 //Components
 import Empty from './Empty';
 import UserAdd from './UserAdd';
 import Settings from './Settings';
 import UserDatabase from './UserDatabase';
 import Charge from './Charge';
+import Switcher from './Switcher';
 //JSON
 import { menuItems } from './MenuItems';
 
@@ -19,15 +20,9 @@ const Dashboard = (props) => {
 
     document.title = 'Finpak - Dashboard'
 
-    const { auth, user, firestore } = props;
+    const { auth, user, firestore, windowSize } = props;
 
-
-    const [stateChange, setStateChange] = useState(0);
-    const [topLeft, setTopLeft] = useState(localStorage.getItem('topLeft'));
-    const [topRight, setTopRight] = useState(localStorage.getItem('topRight'));
-    const [bottomLeft, setBottomLeft] = useState(localStorage.getItem('bottomLeft'));
-    const [bottomRight, setBottomRight] = useState(localStorage.getItem('bottomRight'));
-    const [middle, setMiddle] = useState(sessionStorage.getItem('middle'));
+    const { topLeft, setTopLeft, topRight, setTopRight, bottomLeft, setBottomLeft, bottomRight, setBottomRight, middle, setMiddle, dashboardArray } = props;
 
     const [popup, setPopup] = useState(true);
     const [popupText, setPopupText] = useState({
@@ -35,40 +30,13 @@ const Dashboard = (props) => {
         message: 'Üdvözöl a Finpak x Limoverse!',
     });
 
-    useEffect(() => {
-        setTopLeft(localStorage.getItem('topLeft'));
-        setTopRight(localStorage.getItem('topRight'));
-        setBottomLeft(localStorage.getItem('bottomLeft'));
-        setBottomRight(localStorage.getItem('bottomRight'));
-        setMiddle(sessionStorage.getItem('middle'))
-    },[stateChange])
-
-    const dashboardItems = [
-        {
-            position: 'topLeft',
-            state: topLeft,
-        },
-        {
-            position: 'topRight',
-            state: topRight,
-        },
-        {
-            position: 'bottomLeft',
-            state: bottomLeft,
-        },
-        {
-            position: 'bottomRight',
-            state: bottomRight,
-        },
-    ]
-
     return (
         <div className='h-full w-full flex'>
             {/* Dashboard Nav */}
             <div className="z-10 relative flex flex-col justify-center items-center top-0 left-0 h-full w-16 bg-white dark:bg-gray-900">
                 <div className="mt-6 text-slate-300 dark:text-slate-700 space-y-6">
                 {menuItems.filter(item => item.show === true).map((item) => (
-                    <div onClick={() => {sessionStorage.setItem('middle', item.state);setStateChange(stateChange+1)}} key={uuidv4()} className="w-full flex items-center justify-center hover:text-blue-600 group">
+                    <div onClick={() => {sessionStorage.setItem('middle', item.state);setMiddle(item.state)}} key={uuidv4()} className="w-full flex items-center justify-center hover:text-blue-600 group">
                         <p className="absolute left-[85%] text-slate-600 dark:text-slate-400 shadow text-sm bg-slate-200 dark:bg-slate-800 px-3 py-0.5 rounded-md hidden group-hover:block">{item.text}</p>
                         {item.icon}
                     </div>
@@ -76,7 +44,7 @@ const Dashboard = (props) => {
                 </div>
                 {/* Lower Nav */}
                 <div className="mt-auto mb-6 space-y-6">
-                    <div onClick={() => {sessionStorage.setItem('middle', 'profile');setStateChange(stateChange+1)}} className="w-full flex items-center justify-center text-slate-300 dark:text-slate-700 hover:text-blue-600 group">
+                    <div onClick={() => {sessionStorage.setItem('middle', 'profile');setMiddle('profile')}} className="w-full flex items-center justify-center text-slate-300 dark:text-slate-700 hover:text-blue-600 group">
                             <p className="absolute left-[85%] text-slate-600 dark:text-slate-400 shadow text-sm bg-slate-200 dark:bg-slate-800 px-2 py-0.5 rounded-md hidden group-hover:block">Beállítások</p>
                             <HiCog className='text-2xl'/>
                     </div>
@@ -89,23 +57,7 @@ const Dashboard = (props) => {
             {/* Middle Box */}
             <div className={`fixed z-30 items-center justify-center bg-slate-900 bg-opacity-60 top-0 left-0 h-full w-full ${middle ? 'flex' : 'hidden'}`}>
                 <div className="w-[90%] h-[80%] md:w-[55%] md:h-[55%] xl:w-[40%] xl:h-[45%]">
-                <Switch condition={middle}>
-                        <Case value="user-add">
-                            <UserAdd key={uuidv4()} firestore={firestore} user={user} position={'middle'} stateChange={stateChange} setStateChange={(stateChange) => setStateChange(stateChange)} />
-                        </Case>
-                        <Case value="profile">
-                            <Settings key={uuidv4()} position={'middle'} stateChange={stateChange} setStateChange={(stateChange) => setStateChange(stateChange)}/>
-                        </Case>
-                        <Case value="database">
-                            <UserDatabase key={uuidv4()} firestore={firestore} user={user} position={'middle'} stateChange={stateChange} setStateChange={(stateChange) => setStateChange(stateChange)} />
-                        </Case>
-                        <Case value="charge">
-                            <Charge key={uuidv4()} firestore={firestore} user={user} position={'middle'} stateChange={stateChange} setStateChange={(stateChange) => setStateChange(stateChange)} />
-                        </Case>
-                        <Default>
-                            <Empty key={uuidv4()} state={middle} position={'middle'} stateChange={stateChange} setStateChange={(stateChange) => setStateChange(stateChange)} />
-                        </Default>
-                    </Switch>
+                    <Switcher dashboardArray={dashboardArray} firestore={firestore} user={user} state={middle} setState={(e) => setMiddle(e)} position={'topLeft'} />
                 </div>
             </div>
             {/* Right Box */}
@@ -124,24 +76,10 @@ const Dashboard = (props) => {
                     </div>
                 </div>
                 <div onClick={(e) => e.stopPropagation()} className="w-full h-full grid grid-cols-1 grid-rows-1 md:grid-cols-2 md:grid-rows-2 md:gap-2 p-2">
-                {dashboardItems.map((item) => (
-                    <div key={uuidv4()} className="hidden first:flex sm:flex">
-                        <Switch condition={item.state}>
-                            <Case value="user-add">
-                                <UserAdd key={uuidv4()} firestore={firestore} user={user} state={item.state} position={item.position} stateChange={stateChange} setStateChange={(stateChange) => setStateChange(stateChange)}/>
-                            </Case>
-                            <Case value="database">
-                                <UserDatabase key={uuidv4()} firestore={firestore} user={user} position={item.position} stateChange={stateChange} setStateChange={(stateChange) => setStateChange(stateChange)}/>
-                            </Case>
-                            <Case value="charge">
-                                <Charge key={uuidv4()} firestore={firestore} user={user} position={item.position} stateChange={stateChange} setStateChange={(stateChange) => setStateChange(stateChange)}/>
-                            </Case>
-                            <Default>
-                                <Empty key={uuidv4()} state={item.state} position={item.position} stateChange={stateChange} setStateChange={(stateChange) => setStateChange(stateChange)} />
-                            </Default>
-                        </Switch>
-                    </div>
-                ))}
+                    <Switcher dashboardArray={dashboardArray} firestore={firestore} user={user} state={topLeft} setState={(e) => setTopLeft(e)} position={'topLeft'} />
+                    <Switcher dashboardArray={dashboardArray} firestore={firestore} user={user} state={topRight} setState={(e) => setTopRight(e)} position={'topRight'} />
+                    <Switcher dashboardArray={dashboardArray} firestore={firestore} user={user} state={bottomLeft} setState={(e) => setBottomLeft(e)} position={'bottomLeft'} />
+                    <Switcher dashboardArray={dashboardArray} firestore={firestore} user={user} state={bottomRight} setState={(e) => setBottomRight(e)} position={'bottomRight'} />
                 </div>
             </div>
         </div>

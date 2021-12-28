@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { initializeApp } from "firebase/app";
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { getAuth } from "firebase/auth";
@@ -28,6 +28,42 @@ function App() {
   const[user] = useAuthState(auth);
   const firestore = getFirestore(app);
   const [isReady, setIsReady] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  const [topLeft, setTopLeft] = useState(localStorage.getItem('topLeft'));
+  const [topRight, setTopRight] = useState(localStorage.getItem('topRight'));
+  const [bottomLeft, setBottomLeft] = useState(localStorage.getItem('bottomLeft'));
+  const [bottomRight, setBottomRight] = useState(localStorage.getItem('bottomRight'));
+  const [middle, setMiddle] = useState(sessionStorage.getItem('middle'));
+
+  const [dashboardArray, setDashboardArray] = useState([localStorage.getItem('topLeft'), localStorage.getItem('topRight'), localStorage.getItem('bottomLeft'), localStorage.getItem('bottomRight')]);
+
+  useEffect(() => {
+    setDashboardArray([localStorage.getItem('topLeft'), localStorage.getItem('topRight'), localStorage.getItem('bottomLeft'), localStorage.getItem('bottomRight')])
+  },[topLeft, topRight, bottomLeft, bottomRight])
+
+  const dashboardItems = [
+    {
+        position: 'topLeft',
+        state: topLeft,
+        setState: useCallback((topLeft) => setTopLeft(topLeft),[]), 
+    },
+    {
+        position: 'topRight',
+        state: topRight,
+        setState: useCallback((topRight) => setTopRight(topRight),[]), 
+    },
+    {
+        position: 'bottomLeft',
+        state: bottomLeft,
+        setState: (bottomLeft) => setBottomLeft(bottomLeft), 
+    },
+    {
+        position: 'bottomRight',
+        state: bottomRight,
+        setState: (bottomRight) => setBottomRight(bottomRight), 
+    },
+]
 
   useEffect(() => {
     setTimeout(() => {
@@ -35,9 +71,20 @@ function App() {
     },600)
   },[])
 
+  window.addEventListener('resize', () => {
+    setWindowWidth(window.innerWidth);
+  })
+
   return (
     <div className="h-screen w-screen select-none overflow-hidden bg-slate-100 dark:bg-gray-800">
-      {isReady ? (user ? <Dashboard auth={auth} firestore={firestore} user={user} /> : <Login auth={auth} />) : <Loader />}
+      {isReady ? (user ? <Dashboard auth={auth} firestore={firestore} user={user} windowWidth={windowWidth}
+      topLeft={topLeft} setTopLeft={(topLeft) => setTopLeft(topLeft)}
+      topRight={topRight} setTopRight={(topRight) => setTopRight(topRight)}
+      bottomLeft={bottomLeft} setBottomLeft={(bottomLeft) => setBottomLeft(bottomLeft)}
+      bottomRight={bottomRight} setBottomRight={(bottomRight) => setBottomRight(bottomRight)}
+      middle={middle} setMiddle={(middle) => setMiddle(middle)}
+      dashboardArray={dashboardArray}
+      /> : <Login auth={auth} />) : <Loader />}
     </div>
   );
 }

@@ -8,7 +8,7 @@ import { RiArrowLeftSFill, RiArrowRightSFill } from 'react-icons/ri'
 import MOLRefuel from '../json/refuel.json'
 import MOLPlugee from '../json/charge.json'
 
-const Charge = (props) => {
+const Charge = React.memo((props) => {
 
     const { firestore, user } = props;
 
@@ -47,7 +47,8 @@ const Charge = (props) => {
     },[stateChange])
 
     useEffect(() => {
-        getPagedDataFromDatabase(firestore, 'charges', currentPage, 3).then(data => setResponseData(data))
+        // getPagedDataFromDatabase(firestore, 'charges', currentPage, 4).then(data => setResponseData(data))
+        alert('re-render')
     },[firestore, currentPage])
 
     const onFormSubmit = (e) => {
@@ -105,7 +106,7 @@ const Charge = (props) => {
                             </form>
                         </div> : ''
                     }
-                    <HiX onClick={() => {localStorage.removeItem(props.position);sessionStorage.removeItem(props.position);props.setStateChange(props.stateChange+1)}} className='cursor-pointer ml-auto text-slate-500 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-600 text-lg'/>
+                    <HiX onClick={() => {localStorage.removeItem(props.position);sessionStorage.removeItem(props.position);(props.position === 'middle' ? props.setState(sessionStorage.getItem(props.position)) : props.setState(localStorage.getItem(props.position)))}} className='cursor-pointer ml-auto text-slate-500 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-600 text-lg'/>
                 </div>
             </div>
             {view === 'main' ?
@@ -153,9 +154,11 @@ const Charge = (props) => {
             <div className="py-10 px-4 h-full w-full flex flex-col items-center justify-center">
                 <div className="w-full grid lg:grid-cols-2 gap-2">
                     {responseData.map((item) => (
-                        <div className="">
-                            {/* TODO: Need to finnish */}
-                        </div>
+                            <div key={uuidv4()} className="px-2 rounded-lg gap-1 py-1.5 hover:bg-slate-300 dark:hover:bg-gray-600">
+                                <p className={`mb-1 self-center font-semibold text-center text-xs text-slate-200 dark:text-slate-300 py-0.5 px-2 rounded-full max-w-max ${item.status === 'ready' ? 'bg-emerald-500' : (item.status === 'standby' ? 'bg-blue-500' : 'bg-pink-500')}`}>{item.status.toUpperCase()}</p>
+                                <p className="self-center text-slate-500 dark:text-slate-400 text-xs font-bold">{item.place}</p>
+                                <p className="self-center text-slate-500 dark:text-slate-400 text-xs">{item.timestamp}</p>
+                            </div>
                     ))}
                 </div>
             </div> : ''}
@@ -167,6 +170,6 @@ const Charge = (props) => {
             </div> : ''}
         </div>
     )
-}
+})
 
 export default Charge

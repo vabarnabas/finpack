@@ -100,7 +100,7 @@ const UserDatabase = (props) => {
     return (
         <div onClick={() => setFilter(false)} className='dashboard-card'>
             <div className="absolute w-full top-3 px-3 flex items-center justify-center">
-                <p className="text-xs font-semibold mr-auto text-slate-500 pl-2">ADATBÁZIS</p>
+                <p className="text-xs font-semibold mr-auto text-slate-500 pl-2">{'ADATBÁZIS ' + props.position}</p>
                 <div className="relative ml-auto flex justify-center items-center space-x-2">
                     <HiFilter onClick={(e) => {e.stopPropagation();setFilter(!filter)}} className='cursor-pointer text-slate-500 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-600'/>
                     {filter ?
@@ -128,7 +128,7 @@ const UserDatabase = (props) => {
                         </div>
                     </div> : ''
                     }
-                <HiX onClick={() => {localStorage.removeItem(props.position);sessionStorage.removeItem(props.position);props.setStateChange(props.stateChange+1)}} className='cursor-pointer text-slate-500 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-600 text-lg'/>
+                <HiX onClick={() => {localStorage.removeItem(props.position);sessionStorage.removeItem(props.position);(props.position === 'middle' ? props.setState(sessionStorage.getItem(props.position)) : props.setState(localStorage.getItem(props.position)))}} className='cursor-pointer text-slate-500 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-600 text-lg'/>
                 </div>
             </div>
             <div className="h-full w-full flex items-center justify-center px-4 py-10">

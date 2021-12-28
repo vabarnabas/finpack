@@ -49,7 +49,7 @@ const UserAdd = (props) => {
         <div onClick={() => setSelfSearch(false)} className='dashboard-card'>
             <div className="absolute w-full top-3 px-3 flex items-center justify-center">
                 <p className="text-xs font-semibold mr-auto text-slate-500 pl-2">RÉSZLETFIZETŐ HOZZÁADÁSA</p>
-                <HiX onClick={() => {localStorage.removeItem(props.position);sessionStorage.removeItem(props.position);props.setStateChange(props.stateChange+1)}} className='cursor-pointer ml-auto text-slate-500 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-600 text-lg'/>
+                <HiX onClick={() => {localStorage.removeItem(props.position);sessionStorage.removeItem(props.position);(props.position === 'middle' ? props.setState(sessionStorage.getItem(props.position)) : props.setState(localStorage.getItem(props.position)))}} className='cursor-pointer ml-auto text-slate-500 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-600 text-lg'/>
             </div>
             <form onSubmit={onFormSubmit} className="py-10 px-4 h-full w-full flex flex-col items-center justify-center">
                 <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 place-content-center gap-x-4 gap-y-3 xl:gap-y-4">
