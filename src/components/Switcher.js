@@ -19,10 +19,13 @@ const Switcher = ({firestore, user, state, setState, position, dashboardArray}) 
                     <UserAdd firestore={firestore} user={user} state={state} setState={setState} position={position} />
                 </Case>
                 <Case value="database">
-                    <UserDatabase  firestore={firestore} user={user} state={state} setState={setState} position={position} />
+                    <UserDatabase firestore={firestore} user={user} state={state} setState={setState} position={position} />
                 </Case>
                 <Case value="charge">
                      <Charge firestore={firestore} user={user} state={state} setState={setState} position={position} />
+                </Case>
+                <Case value="settings">
+                     <Settings firestore={firestore} user={user} state={state} setState={setState} position={position} />
                 </Case>
                 <Default>
                     <Empty dashboardArray={dashboardArray} state={state} setState={setState} position={position} />

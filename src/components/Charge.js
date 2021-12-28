@@ -8,9 +8,7 @@ import { RiArrowLeftSFill, RiArrowRightSFill } from 'react-icons/ri'
 import MOLRefuel from '../json/refuel.json'
 import MOLPlugee from '../json/charge.json'
 
-const Charge = React.memo((props) => {
-
-    const { firestore, user } = props;
+const Charge = React.memo(({ firestore, user, state, setState, position }) => {
 
     const [view, setView] = useState('main');
     const [code, setCode] = useState('');
@@ -48,7 +46,7 @@ const Charge = React.memo((props) => {
 
     useEffect(() => {
         // getPagedDataFromDatabase(firestore, 'charges', currentPage, 4).then(data => setResponseData(data))
-        alert('re-render')
+        // alert('re-render')
     },[firestore, currentPage])
 
     const onFormSubmit = (e) => {
@@ -106,7 +104,7 @@ const Charge = React.memo((props) => {
                             </form>
                         </div> : ''
                     }
-                    <HiX onClick={() => {localStorage.removeItem(props.position);sessionStorage.removeItem(props.position);(props.position === 'middle' ? props.setState(sessionStorage.getItem(props.position)) : props.setState(localStorage.getItem(props.position)))}} className='cursor-pointer ml-auto text-slate-500 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-600 text-lg'/>
+                    <HiX onClick={() => {localStorage.removeItem(position);sessionStorage.removeItem(position);(position === 'middle' ? setState(sessionStorage.getItem(position)) : setState(localStorage.getItem(position)))}} className='cursor-pointer ml-auto text-slate-500 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-600 text-lg'/>
                 </div>
             </div>
             {view === 'main' ?

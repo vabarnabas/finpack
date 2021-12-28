@@ -24,9 +24,9 @@ export const menuItems = [
         show: true,
     },
     {
-        text: 'Profilom',
+        text: 'Beállítások',
         icon: null,
-        state: 'profile',
+        state: 'settings',
         placeable: false,
         show: false,
     },

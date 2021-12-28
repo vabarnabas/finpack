@@ -1,10 +1,9 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import { initializeApp } from "firebase/app";
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { getAuth } from "firebase/auth";
 import { initializeFirestore } from 'firebase/firestore'; 
 import { getFirestore } from 'firebase/firestore'
-import { getStaffData } from './components/Utilities';
 
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
@@ -41,29 +40,6 @@ function App() {
   useEffect(() => {
     setDashboardArray([localStorage.getItem('topLeft'), localStorage.getItem('topRight'), localStorage.getItem('bottomLeft'), localStorage.getItem('bottomRight')])
   },[topLeft, topRight, bottomLeft, bottomRight])
-
-  const dashboardItems = [
-    {
-        position: 'topLeft',
-        state: topLeft,
-        setState: useCallback((topLeft) => setTopLeft(topLeft),[]), 
-    },
-    {
-        position: 'topRight',
-        state: topRight,
-        setState: useCallback((topRight) => setTopRight(topRight),[]), 
-    },
-    {
-        position: 'bottomLeft',
-        state: bottomLeft,
-        setState: (bottomLeft) => setBottomLeft(bottomLeft), 
-    },
-    {
-        position: 'bottomRight',
-        state: bottomRight,
-        setState: (bottomRight) => setBottomRight(bottomRight), 
-    },
-]
 
   useEffect(() => {
     setTimeout(() => {
