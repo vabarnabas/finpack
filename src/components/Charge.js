@@ -1,4 +1,4 @@
-import React, { useState, useEffect }  from 'react'
+import React, { useState, useEffect, useCallback}  from 'react'
 import { v4 as uuidv4 } from 'uuid';
 import { onSearchQuery, onSearchClick, getCurrentDateTime, getIfJSON, writeDataToDatabase, getPagedDataFromDatabase } from './Utilities';
 import { HiX, HiClock, HiLightningBolt, HiCode, HiClipboardList, HiCollection } from 'react-icons/hi'
@@ -30,6 +30,7 @@ const Charge = ({ firestore, user, setState, position }) => {
     const [selfSearch, setSelfSearch] = useState(false);
 
     const [currentPage, setCurrentPage] = useState(0);
+    const [pageSize, setPageSize] = useState(4);
     const [responseData, setResponseData] = useState([]);
 
     const places = (isPlugee ? MOLPlugee : MOLRefuel)
@@ -43,9 +44,6 @@ const Charge = ({ firestore, user, setState, position }) => {
         setAutonomyStart('');
         setAutonomyEnd('');
     },[stateChange])
-
-    // TODO: Only read data when clicking on page change
-    // getPagedDataFromDatabase(firestore, 'charges', currentPage, 4).then(data => setResponseData(data))
 
     const onFormSubmit = (e) => {
         e.preventDefault();
@@ -82,14 +80,25 @@ const Charge = ({ firestore, user, setState, position }) => {
         setShowCode(false);
     }
 
+    const onPageChange = useCallback(() => {
+        getPagedDataFromDatabase(firestore, 'charges', currentPage, pageSize).then(data => setResponseData(data));
+    },[firestore, currentPage, pageSize])
+
+    const changeView = (value) => {
+        if (view === 'main') {
+            onPageChange();
+        }
+        setView(value);
+    }
+
     return (
         <div onClick={() => {setSelfSearch(false);setShowCode(false)}} className='dashboard-card'>
             <div className="absolute w-full top-3 px-3 flex items-center justify-center">
                 <p className="text-xs font-semibold mr-auto text-slate-500 pl-2">TÖLTÉS, TANKOLÁS</p>
                 <div className="relative ml-auto flex justify-center items-center space-x-2">
                     {view === 'main' ?
-                        <HiCollection onClick={() => setView('list')} className='cursor-pointer text-slate-500 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-600'/> :
-                        <HiClipboardList onClick={() => setView('main')} className='cursor-pointer text-slate-500 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-600'/>
+                        <HiCollection onClick={() => changeView('list')} className='cursor-pointer text-slate-500 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-600'/> :
+                        <HiClipboardList onClick={() => changeView('main')} className='cursor-pointer text-slate-500 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-600'/>
                     }
                     <HiCode onClick={(e) => {e.stopPropagation();setSelfSearch(false);setShowCode(!showCode)}} className='text-slate-500 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-600'/>
                     {showCode ?

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { Route, Routes, Navigate } from "react-router-dom";
 import { initializeApp } from "firebase/app";
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { getAuth } from "firebase/auth";
@@ -8,6 +9,7 @@ import { getFirestore } from 'firebase/firestore'
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
 import Loader from './components/Loader';
+import ErrorScreen from './components/ErrorScreen';
 
 const firebaseConfig = {
   apiKey: "AIzaSyBmMdqmGDNJToWv-i69IejXuwxZAXkrMc0",
@@ -53,14 +55,29 @@ function App() {
 
   return (
     <div className="h-screen w-screen select-none overflow-hidden bg-slate-100 dark:bg-gray-800">
-      {isReady ? (user ? <Dashboard auth={auth} firestore={firestore} user={user} windowWidth={windowWidth}
+      {/* {isReady ? 
+      (user ? <Dashboard auth={auth} firestore={firestore} user={user} windowWidth={windowWidth}
       topLeft={topLeft} setTopLeft={(topLeft) => setTopLeft(topLeft)}
       topRight={topRight} setTopRight={(topRight) => setTopRight(topRight)}
       bottomLeft={bottomLeft} setBottomLeft={(bottomLeft) => setBottomLeft(bottomLeft)}
       bottomRight={bottomRight} setBottomRight={(bottomRight) => setBottomRight(bottomRight)}
       middle={middle} setMiddle={(middle) => setMiddle(middle)}
       dashboardArray={dashboardArray}
-      /> : <Login auth={auth} />) : <Loader />}
+      /> : <Login auth={auth} />) : <Loader />} */}
+      {isReady ?
+      <Routes>
+        <Route path="/login" element={user ? <Navigate to="/dashboard" /> : <Login auth={auth} />} />
+        <Route path="/dashboard" element={!user ? <Navigate to="/dashboard" /> : <Dashboard auth={auth} firestore={firestore} user={user} windowWidth={windowWidth}
+        topLeft={topLeft} setTopLeft={(topLeft) => setTopLeft(topLeft)}
+        topRight={topRight} setTopRight={(topRight) => setTopRight(topRight)}
+        bottomLeft={bottomLeft} setBottomLeft={(bottomLeft) => setBottomLeft(bottomLeft)}
+        bottomRight={bottomRight} setBottomRight={(bottomRight) => setBottomRight(bottomRight)}
+        middle={middle} setMiddle={(middle) => setMiddle(middle)}
+        dashboardArray={dashboardArray}
+        />} />
+        <Route exact path="/" element={<Navigate to="/login"/>} />
+        <Route path='*' element={<ErrorScreen />} />
+      </Routes> : <Loader />}
     </div>
   );
 }
