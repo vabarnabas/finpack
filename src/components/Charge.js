@@ -8,7 +8,7 @@ import { RiArrowLeftSFill, RiArrowRightSFill } from 'react-icons/ri'
 import MOLRefuel from '../json/refuel.json'
 import MOLPlugee from '../json/charge.json'
 
-const Charge = React.memo(({ firestore, user, state, setState, position }) => {
+const Charge = ({ firestore, user, setState, position }) => {
 
     const [view, setView] = useState('main');
     const [code, setCode] = useState('');
@@ -44,10 +44,8 @@ const Charge = React.memo(({ firestore, user, state, setState, position }) => {
         setAutonomyEnd('');
     },[stateChange])
 
-    useEffect(() => {
-        // getPagedDataFromDatabase(firestore, 'charges', currentPage, 4).then(data => setResponseData(data))
-        // alert('re-render')
-    },[firestore, currentPage])
+    // TODO: Only read data when clicking on page change
+    // getPagedDataFromDatabase(firestore, 'charges', currentPage, 4).then(data => setResponseData(data))
 
     const onFormSubmit = (e) => {
         e.preventDefault();
@@ -168,6 +166,6 @@ const Charge = React.memo(({ firestore, user, state, setState, position }) => {
             </div> : ''}
         </div>
     )
-})
+}
 
 export default Charge
