@@ -1,7 +1,6 @@
 import React from 'react'
 import { useState } from 'react'
 //Packages
-import { v4 as uuidv4 } from 'uuid';
 import { signOut } from "firebase/auth";
 //Icons & Design
 import { HiLogin, HiSearch, HiX, HiCog } from 'react-icons/hi'
@@ -14,7 +13,7 @@ const Dashboard = (props) => {
 
     document.title = 'Finpak - Dashboard'
 
-    const { auth, user, firestore, windowSize } = props;
+    const { auth, user, windowSize } = props;
 
     const { topLeft, setTopLeft, topRight, setTopRight, bottomLeft, setBottomLeft, bottomRight, setBottomRight, middle, setMiddle, dashboardArray } = props;
 
@@ -30,7 +29,7 @@ const Dashboard = (props) => {
             <div className="z-10 relative flex flex-col justify-center items-center top-0 left-0 h-full w-16 bg-white dark:bg-gray-900">
                 <div className="mt-6 text-slate-300 dark:text-slate-700 space-y-6">
                 {menuItems.filter(item => item.show === true).map((item) => (
-                    <div onClick={() => {sessionStorage.setItem('middle', item.state);setMiddle(item.state)}} key={uuidv4()} className="w-full flex items-center justify-center hover:text-blue-600 group">
+                    <div onClick={() => {sessionStorage.setItem('middle', item.state);setMiddle(item.state)}} key={item.state} className="w-full flex items-center justify-center hover:text-blue-600 group">
                         <p className="absolute left-[85%] text-slate-600 dark:text-slate-400 shadow text-sm bg-slate-200 dark:bg-slate-800 px-3 py-0.5 rounded-md hidden group-hover:block">{item.text}</p>
                         {item.icon}
                     </div>
@@ -42,7 +41,7 @@ const Dashboard = (props) => {
                             <p className="absolute left-[85%] text-slate-600 dark:text-slate-400 shadow text-sm bg-slate-200 dark:bg-slate-800 px-2 py-0.5 rounded-md hidden group-hover:block">Beállítások</p>
                             <HiCog className='text-2xl'/>
                     </div>
-                    <div onClick={() => signOut(auth)} key={uuidv4()} className="w-full flex items-center justify-center text-slate-300 dark:text-slate-700 hover:text-blue-600 group">
+                    <div onClick={() => signOut(auth)} className="w-full flex items-center justify-center text-slate-300 dark:text-slate-700 hover:text-blue-600 group">
                             <p className="absolute left-[85%] text-slate-600 dark:text-slate-400 shadow text-sm bg-slate-200 dark:bg-slate-800 px-2 py-0.5 rounded-md hidden group-hover:block">Kijelentkezés</p>
                             <HiLogin className='text-2xl'/>
                     </div>
@@ -51,7 +50,7 @@ const Dashboard = (props) => {
             {/* Middle Box */}
             <div className={`fixed z-30 items-center justify-center bg-slate-900 bg-opacity-60 top-0 left-0 h-full w-full ${middle ? 'flex' : 'hidden'}`}>
                 <div className="w-[90%] h-[80%] md:w-[55%] md:h-[55%] xl:w-[40%] xl:h-[45%]">
-                    <Switcher dashboardArray={dashboardArray} firestore={firestore} user={user} state={middle} setState={(e) => setMiddle(e)} position={'middle'} />
+                    <Switcher dashboardArray={dashboardArray} user={user} state={middle} setState={(e) => setMiddle(e)} position={'middle'} />
                 </div>
             </div>
             {/* Right Box */}
@@ -70,10 +69,10 @@ const Dashboard = (props) => {
                     </div>
                 </div>
                 <div onClick={(e) => e.stopPropagation()} className="w-full h-full grid grid-cols-1 grid-rows-1 md:grid-cols-2 md:grid-rows-2 md:gap-2 p-2">
-                    <Switcher dashboardArray={dashboardArray} firestore={firestore} user={user} state={topLeft} setState={(e) => setTopLeft(e)} position={'topLeft'} />
-                    <Switcher dashboardArray={dashboardArray} firestore={firestore} user={user} state={topRight} setState={(e) => setTopRight(e)} position={'topRight'} />
-                    <Switcher dashboardArray={dashboardArray} firestore={firestore} user={user} state={bottomLeft} setState={(e) => setBottomLeft(e)} position={'bottomLeft'} />
-                    <Switcher dashboardArray={dashboardArray} firestore={firestore} user={user} state={bottomRight} setState={(e) => setBottomRight(e)} position={'bottomRight'} />
+                    <Switcher dashboardArray={dashboardArray} user={user} state={topLeft} setState={(e) => setTopLeft(e)} position={'topLeft'} />
+                    <Switcher dashboardArray={dashboardArray} user={user} state={topRight} setState={(e) => setTopRight(e)} position={'topRight'} />
+                    <Switcher dashboardArray={dashboardArray} user={user} state={bottomLeft} setState={(e) => setBottomLeft(e)} position={'bottomLeft'} />
+                    <Switcher dashboardArray={dashboardArray} user={user} state={bottomRight} setState={(e) => setBottomRight(e)} position={'bottomRight'} />
                 </div>
             </div>
         </div>

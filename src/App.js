@@ -9,7 +9,6 @@ import { getFirestore } from 'firebase/firestore'
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
 import Loader from './components/Loader';
-import ErrorScreen from './components/ErrorScreen';
 
 const firebaseConfig = {
   apiKey: "AIzaSyBmMdqmGDNJToWv-i69IejXuwxZAXkrMc0",
@@ -17,17 +16,19 @@ const firebaseConfig = {
   projectId: "finpak-main",
   storageBucket: "finpak-main.appspot.com",
   messagingSenderId: "85551013636",
-  appId: "1:85551013636:web:6a7cd45fa0c7703ffa7a51"
+  appId: "1:85551013636:web:6a7cd45fa0c7703ffa7a51",
 };
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 initializeFirestore(app, {experimentalForceLongPolling: true});
 
-function App() {
+export const firestore = getFirestore(app);
 
+function App() {
+  
   const[user] = useAuthState(auth);
-  const firestore = getFirestore(app);
+  
   const [isReady, setIsReady] = useState(false);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
@@ -55,15 +56,6 @@ function App() {
 
   return (
     <div className="h-screen w-screen select-none overflow-hidden bg-slate-100 dark:bg-gray-800">
-      {/* {isReady ? 
-      (user ? <Dashboard auth={auth} firestore={firestore} user={user} windowWidth={windowWidth}
-      topLeft={topLeft} setTopLeft={(topLeft) => setTopLeft(topLeft)}
-      topRight={topRight} setTopRight={(topRight) => setTopRight(topRight)}
-      bottomLeft={bottomLeft} setBottomLeft={(bottomLeft) => setBottomLeft(bottomLeft)}
-      bottomRight={bottomRight} setBottomRight={(bottomRight) => setBottomRight(bottomRight)}
-      middle={middle} setMiddle={(middle) => setMiddle(middle)}
-      dashboardArray={dashboardArray}
-      /> : <Login auth={auth} />) : <Loader />} */}
       {isReady ?
       <Routes>
         <Route path="/login" element={user ? <Navigate to="/dashboard" /> : <Login auth={auth} />} />
@@ -76,7 +68,7 @@ function App() {
         dashboardArray={dashboardArray}
         />} />
         <Route exact path="/" element={<Navigate to="/login"/>} />
-        <Route path='*' element={<ErrorScreen />} />
+        <Route path='*' element={<Navigate to="/" />} />
       </Routes> : <Loader />}
     </div>
   );

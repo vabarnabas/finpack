@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useCallback}  from 'react'
-import { v4 as uuidv4 } from 'uuid';
+import React, { useState, useEffect }  from 'react'
 import { onSearchQuery, onSearchClick, getCurrentDateTime, getIfJSON, writeDataToDatabase, getPagedDataFromDatabase } from './Utilities';
 import { HiX, HiClock, HiLightningBolt, HiCode, HiClipboardList, HiCollection } from 'react-icons/hi'
 import { MdLocalGasStation } from 'react-icons/md'
@@ -8,7 +7,7 @@ import { RiArrowLeftSFill, RiArrowRightSFill } from 'react-icons/ri'
 import MOLRefuel from '../json/refuel.json'
 import MOLPlugee from '../json/charge.json'
 
-const Charge = ({ firestore, user, setState, position }) => {
+const Charge = ({ user, setState, position }) => {
 
     const [view, setView] = useState('main');
     const [code, setCode] = useState('');
@@ -47,7 +46,7 @@ const Charge = ({ firestore, user, setState, position }) => {
 
     const onFormSubmit = (e) => {
         e.preventDefault();
-        writeDataToDatabase(firestore, 'charges', {
+        writeDataToDatabase('charges', {
             tripId: tripId,
             price: parseInt(price),
             chargeStart: chargeStart,
@@ -80,16 +79,9 @@ const Charge = ({ firestore, user, setState, position }) => {
         setShowCode(false);
     }
 
-    const onPageChange = useCallback(() => {
-        getPagedDataFromDatabase(firestore, 'charges', currentPage, pageSize).then(data => setResponseData(data));
-    },[firestore, currentPage, pageSize])
-
-    const changeView = (value) => {
-        if (view === 'main') {
-            onPageChange();
-        }
-        setView(value);
-    }
+    useEffect(() => {
+        // getPagedDataFromDatabase('charges', currentPage, pageSize).then(data => setResponseData(data));
+    },[currentPage, pageSize])
 
     return (
         <div onClick={() => {setSelfSearch(false);setShowCode(false)}} className='dashboard-card'>
@@ -97,8 +89,8 @@ const Charge = ({ firestore, user, setState, position }) => {
                 <p className="text-xs font-semibold mr-auto text-slate-500 pl-2">TÖLTÉS, TANKOLÁS</p>
                 <div className="relative ml-auto flex justify-center items-center space-x-2">
                     {view === 'main' ?
-                        <HiCollection onClick={() => changeView('list')} className='cursor-pointer text-slate-500 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-600'/> :
-                        <HiClipboardList onClick={() => changeView('main')} className='cursor-pointer text-slate-500 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-600'/>
+                        <HiCollection onClick={() => setView('list')} className='cursor-pointer text-slate-500 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-600'/> :
+                        <HiClipboardList onClick={() => setView('main')} className='cursor-pointer text-slate-500 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-600'/>
                     }
                     <HiCode onClick={(e) => {e.stopPropagation();setSelfSearch(false);setShowCode(!showCode)}} className='text-slate-500 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-600'/>
                     {showCode ?
@@ -136,7 +128,7 @@ const Charge = ({ firestore, user, setState, position }) => {
                         {(place !== '' && selfSearch) ? 
                         <div className="z-20 w-full absolute top-[105%] rounded-lg max-h-24 bg-slate-200 dark:bg-gray-700 shadow shadow-slate-300 dark:shadow-gray-800 overflow-y-scroll scrollbar-hide">
                             {placeList.map((place) => (
-                                <div onClick={() => onSearchClick(place, (place) => setPlace(place), (selfSearch) => setSelfSearch(selfSearch))} key={uuidv4()} className="px-1 flex items-center hover:bg-slate-300 dark:hover:bg-gray-600 text-slate-600 dark:text-slate-400">
+                                <div onClick={() => onSearchClick(place, (place) => setPlace(place), (selfSearch) => setSelfSearch(selfSearch))} key={place} className="px-1 flex items-center hover:bg-slate-300 dark:hover:bg-gray-600 text-slate-600 dark:text-slate-400">
                                     <p className="py-2 px-3 text-left text-xs">{place}</p>
                                 </div>
                             ))}
@@ -154,16 +146,16 @@ const Charge = ({ firestore, user, setState, position }) => {
                         <button className="w-full bg-blue-500 hover:bg-blue-600 text-sm text-white dark:text-slate-300 rounded-full py-1">Leadás</button>
                     </div>
                 </div>
-            </form> :''}
+            </form> : ''}
             {view === 'list' ? 
             <div className="py-10 px-4 h-full w-full flex flex-col items-center justify-center">
                 <div className="w-full grid lg:grid-cols-2 gap-2">
                     {responseData.map((item) => (
-                            <div key={uuidv4()} className="px-2 rounded-lg gap-1 py-1.5 hover:bg-slate-300 dark:hover:bg-gray-600">
-                                <p className={`mb-1 self-center font-semibold text-center text-xs text-slate-200 dark:text-slate-300 py-0.5 px-2 rounded-full max-w-max ${item.status === 'ready' ? 'bg-emerald-500' : (item.status === 'standby' ? 'bg-blue-500' : 'bg-pink-500')}`}>{item.status.toUpperCase()}</p>
-                                <p className="self-center text-slate-500 dark:text-slate-400 text-xs font-bold">{item.place}</p>
-                                <p className="self-center text-slate-500 dark:text-slate-400 text-xs">{item.timestamp}</p>
-                            </div>
+                        <div key={item.tripId} className="px-2 rounded-lg gap-1 py-1.5 hover:bg-slate-300 dark:hover:bg-gray-600">
+                            <p className={`mb-1 self-center font-semibold text-center text-xs text-slate-200 dark:text-slate-300 py-0.5 px-2 rounded-full max-w-max ${item.status === 'ready' ? 'bg-emerald-500' : (item.status === 'standby' ? 'bg-blue-500' : 'bg-pink-500')}`}>{item.status.toUpperCase()}</p>
+                            <p className="self-center text-slate-500 dark:text-slate-400 text-xs font-bold">{item.place}</p>
+                            <p className="self-center text-slate-500 dark:text-slate-400 text-xs">{item.timestamp}</p>
+                        </div>
                     ))}
                 </div>
             </div> : ''}

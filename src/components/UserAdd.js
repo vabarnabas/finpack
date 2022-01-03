@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { v4 as uuidv4 } from 'uuid';
 import { getCurrentDateTime, onSearchQuery, onSearchClick, writeDataToDatabase } from './Utilities';
 import { HiX } from 'react-icons/hi'
 import plates from '../json/plates.json'
 
-const UserAdd = ({ firestore, user, setState, position }) => {
+const UserAdd = ({ user, setState, position }) => {
 
     const [stateChange, setStateChange] = useState(0);
     const [userId, setUserId] = useState('');
@@ -28,7 +27,7 @@ const UserAdd = ({ firestore, user, setState, position }) => {
     
     const onFormSubmit = (e) => {
         e.preventDefault();
-        writeDataToDatabase(firestore, 'userDatabase', {
+        writeDataToDatabase('userDatabase', {
             userId: userId,
             price: parseInt(price),
             fee: parseInt(price),
@@ -66,7 +65,7 @@ const UserAdd = ({ firestore, user, setState, position }) => {
                         {(plate !== '' && selfSearch) ? 
                         <div className="w-full absolute top-[105%] rounded-lg max-h-24 bg-slate-200 dark:bg-gray-700 shadow shadow-slate-300 dark:shadow-gray-800 overflow-y-scroll scrollbar-hide">
                             {plateList.map((plate) => (
-                                <div onClick={() => onSearchClick(plate, (plate) => setPlate(plate), (selfSearch) => setSelfSearch(selfSearch))} key={uuidv4()} className="px-1 flex items-center hover:bg-slate-300 dark:hover:bg-gray-600 text-slate-600 dark:text-slate-400">
+                                <div onClick={() => onSearchClick(plate, (plate) => setPlate(plate), (selfSearch) => setSelfSearch(selfSearch))} key={plate} className="px-1 flex items-center hover:bg-slate-300 dark:hover:bg-gray-600 text-slate-600 dark:text-slate-400">
                                     <p className="py-2 px-3 text-left text-xs">{plate}</p>
                                 </div>
                             ))}

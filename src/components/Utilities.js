@@ -1,4 +1,5 @@
-import { doc, collection, setDoc, getDocs, increment, startAt, limit } from "firebase/firestore"; 
+import { doc, collection, setDoc, getDocs, increment, startAt, limit } from "firebase/firestore";
+import { firestore } from '../App';
 import { v4 as uuidv4 } from 'uuid';
 
 export const getCurrentDateTime = (time) => {
@@ -38,14 +39,15 @@ export const onSearchClick = (string, setString, setSearch) => {
     setSearch(false);
 }
 
-export const writeDataToDatabase = async (database, folder, object, stateChange, setStateChange) => {
-    await setDoc(doc(database, folder, uuidv4()), object);
+export const writeDataToDatabase = async (folder, object, stateChange, setStateChange) => {
+    await setDoc(doc(firestore, folder, uuidv4()), object);
     if (stateChange !== undefined && setStateChange !== undefined) {
         setStateChange(stateChange+1);
     }
 }
 
-export const getPagedDataFromDatabase = async (database, folder, page, pageSize) => {
-    const querySnapshot = await getDocs(collection(database, folder), startAt(0+(page*pageSize)), limit(pageSize))
-    return querySnapshot.docs.map((doc) => doc.data())
+export const getPagedDataFromDatabase = async (folder, page, pageSize) => {
+    const querySnapshot = await getDocs(collection(firestore, folder), startAt(0+(page*pageSize)), limit(pageSize));
+    console.log(querySnapshot.docs.map((doc) => doc.data()));
+    return querySnapshot.docs.map((doc) => doc.data());
 }
