@@ -1,8 +1,9 @@
 import React, { useState, useEffect }  from 'react'
+import { v4 as uuidv4 } from 'uuid'
 import { onSearchQuery, onSearchClick, getCurrentDateTime, getIfJSON, writeDataToDatabase, getPagedDataFromDatabase } from './Utilities';
-import { HiX, HiClock, HiLightningBolt, HiCode, HiClipboardList, HiCollection } from 'react-icons/hi'
 import { MdLocalGasStation } from 'react-icons/md'
 import { RiArrowLeftSFill, RiArrowRightSFill } from 'react-icons/ri'
+import { HiX, HiClock, HiLightningBolt, HiCode, HiClipboardList, HiCollection, HiSaveAs, HiDocumentDownload } from 'react-icons/hi'
 
 import MOLRefuel from '../json/refuel.json'
 import MOLPlugee from '../json/charge.json'
@@ -11,6 +12,8 @@ const Charge = ({ user, setState, position }) => {
 
     const [view, setView] = useState('main');
     const [code, setCode] = useState('');
+    const [saves, setSaves] = useState(JSON.parse(localStorage.getItem('savedCharges')));
+    const [showSaves, setShowSaves] = useState(false);
     const [showCode, setShowCode] = useState(false);
 
     const [stateChange, setStateChange] = useState(0);
@@ -42,6 +45,7 @@ const Charge = ({ user, setState, position }) => {
         setPlace('');
         setAutonomyStart('');
         setAutonomyEnd('');
+        setSaves(JSON.parse(localStorage.getItem('savedCharges')));
     },[stateChange])
 
     const onFormSubmit = (e) => {
@@ -62,9 +66,9 @@ const Charge = ({ user, setState, position }) => {
         }, stateChange, (stateChange) => setStateChange(stateChange))
     }
 
-    const onJSONLoad = (e) => {
+    const onJSONLoad = (e, json) => {
         e.preventDefault();
-        const object = getIfJSON(code) && JSON.parse(code);
+        const object = getIfJSON(json) && JSON.parse(json);
         if (object?.version === 'legacy') {
             setTripId(object?.tripId);
             setPrice(parseInt(object?.price));
@@ -79,12 +83,54 @@ const Charge = ({ user, setState, position }) => {
         setShowCode(false);
     }
 
+    const onSaving = (e) => {
+        e.preventDefault();
+        let localSaves = saves || [];
+        localSaves.push({
+            key: uuidv4(),
+            tripId: tripId,
+            price: parseInt(price) || 0,
+            chargeStart: chargeStart,
+            chargeEnd: chargeEnd,
+            type: (isPlugee ? 'Töltés' : 'Tankolás'),
+            place: place,
+            autonomyStart: parseInt(autonomyStart) || 0,
+            autonomyEnd: parseInt(autonomyEnd) || 0, 
+        });
+        console.log(JSON.stringify(localSaves))
+        localStorage.setItem('savedCharges', JSON.stringify(localSaves));
+        setStateChange(stateChange+1);
+    }
+
+    const onSaveRemove = (e, id) => {
+        e.preventDefault();
+        let localSaves = saves || [];
+        localSaves.splice(localSaves.map(i => {return i.key;}).indexOf(id),1);
+        localStorage.setItem('savedCharges', JSON.stringify(localSaves));
+        if (localStorage.getItem('savedCharges') === '[]') localStorage.removeItem('savedCharges')
+        setStateChange(stateChange+1);
+    }
+
+    const onSaveLoad = (e, id) => {
+        e.preventDefault();
+        const object = saves[saves.map(i => {return i.key;}).indexOf(id)];
+        setTripId(object?.tripId);
+        setPrice(parseInt(object?.price) || '');
+        setChargeStart(object?.chargeStart);
+        setChargeEnd(object?.chargeEnd);
+        setIsPlugee(object?.type === 'Tankolás' ? false : true);
+        setPlace(object?.place);
+        setAutonomyStart(parseInt(object?.autonomyStart) || '');
+        setAutonomyEnd(parseInt(object?.autonomyEnd) || '');
+        setShowSaves(false);
+    }
+
     useEffect(() => {
         // getPagedDataFromDatabase('charges', currentPage, pageSize).then(data => setResponseData(data));
     },[currentPage, pageSize])
 
     return (
-        <div onClick={() => {setSelfSearch(false);setShowCode(false)}} className='dashboard-card'>
+        <div onClick={() => {setSelfSearch(false);setShowCode(false);setShowSaves(false)}} className='dashboard-card'>
             <div className="absolute w-full top-3 px-3 flex items-center justify-center">
                 <p className="text-xs font-semibold mr-auto text-slate-500 pl-2">TÖLTÉS, TANKOLÁS</p>
                 <div className="relative ml-auto flex justify-center items-center space-x-2">
@@ -92,14 +138,37 @@ const Charge = ({ user, setState, position }) => {
                         <HiCollection onClick={() => setView('list')} className='cursor-pointer text-slate-500 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-600'/> :
                         <HiClipboardList onClick={() => setView('main')} className='cursor-pointer text-slate-500 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-600'/>
                     }
-                    <HiCode onClick={(e) => {e.stopPropagation();setSelfSearch(false);setShowCode(!showCode)}} className='text-slate-500 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-600'/>
+                    <HiSaveAs onClick={(e) => {e.stopPropagation();setSelfSearch(false);setShowSaves(!showSaves);setShowCode(false)}} className='text-slate-500 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-600' />
+                    <HiCode onClick={(e) => {e.stopPropagation();setSelfSearch(false);setShowCode(!showCode);setShowSaves(false)}} className='text-slate-500 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-600'/>
                     {showCode ?
                         <div onClick={(e) => {e.stopPropagation();setSelfSearch(false)}} className="z-10 absolute w-max top-[110%] right-0 py-2 rounded-lg bg-slate-200 dark:bg-gray-700 shadow shadow-slate-300 dark:shadow-gray-800 overflow-y-scroll scrollbar-hide">
-                            <form onSubmit={onJSONLoad} className="relative grid gap-y-3 place-items-center px-4 py-2">
+                            <form onSubmit={(e) => onJSONLoad(e, code)} className="relative grid gap-y-3 place-items-center px-4 py-2">
                                 <div className="grid grid-cols-2 text-slate-600 dark:text-slate-400">
                                     <input value={code} onChange={(e) => setCode(e.target.value)} type="text" placeholder="Kód" className="input-box text-xs col-span-2" />
                                 </div>
                                 <button className="text-xs bg-blue-500 hover:bg-blue-600 text-white dark:text-slate-300 w-full rounded-full py-1">Betöltés</button>
+                            </form>
+                        </div> : ''
+                    }
+                    {showSaves ?
+                        <div onClick={(e) => {e.stopPropagation();setSelfSearch(false)}} className="z-10 absolute w-max top-[110%] right-0 py-2 rounded-lg bg-slate-200 dark:bg-gray-700 shadow shadow-slate-300 dark:shadow-gray-800 overflow-y-scroll scrollbar-hide">
+                            <form onSubmit={onJSONLoad} className="relative min-w-[12rem] grid gap-y-3 place-items-center px-4 py-2">
+                                <div className="max-h-20 overflow-y-scroll space-y-3 scrollbar-hide">
+                                    {saves ? saves.map((item) => (
+                                        <div key={item.key} className="flex items-center justify-end text-slate-600 dark:text-slate-400">
+                                            <p className="text-xs">{(item.place.length > 26 ? item.place.substring(0, 25) + '...' : item.place) || 'Nem ismert helyszín'}</p>
+                                            <div className="flex items-center justify-center text-xs ml-1 underline cursor-pointer">
+                                                <HiDocumentDownload onClick={(e) => onSaveLoad(e, item.key)} className='text-sm mr-1 text-slate-500 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-600' />
+                                                <HiX onClick={(e) => onSaveRemove(e, item.key)} className='text-sm text-slate-500 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-600' />
+                                            </div>
+                                        </div>
+                                    )) : 
+                                        <div className="text-slate-600 dark:text-slate-400">
+                                            <p className="text-xs">Nincsenek még mentett adataid.</p>
+                                        </div>
+                                    }
+                                </div>
+                                <button onClick={onSaving} className="text-xs bg-blue-500 hover:bg-blue-600 text-white dark:text-slate-300 w-full rounded-full py-1">Mentés</button>
                             </form>
                         </div> : ''
                     }
@@ -123,7 +192,7 @@ const Charge = ({ user, setState, position }) => {
                         <input value={chargeEnd} onChange={(e) => setChargeEnd(e.target.value)} required placeholder='Töltés vége*' type="text" className={`input-box pr-8`} />
                     </div>
                     <button onClick={(e) => {e.preventDefault();setIsPlugee(!isPlugee)}} className="w-full bg-blue-500 hover:bg-blue-600 text-sm text-white dark:text-slate-300 rounded-full py-1">{typeText}</button>
-                    <div onClick={(e) => e.stopPropagation()}  className="relative flex items-center justify-center">
+                    <div onClick={(e) => {e.stopPropagation();setShowCode(false);setShowSaves(false)}}  className="relative flex items-center justify-center">
                         <input onFocus={() => setSelfSearch(true)} value={place} onChange={(e) => onSearchQuery(e.target.value, (place) => setPlace(place), places, (placeList) => setPlaceList(placeList), (selfSearch) => setSelfSearch(selfSearch))} placeholder='Helyszín' type="text" className={`input-box`} />
                         {(place !== '' && selfSearch) ? 
                         <div className="z-20 w-full absolute top-[105%] rounded-lg max-h-24 bg-slate-200 dark:bg-gray-700 shadow shadow-slate-300 dark:shadow-gray-800 overflow-y-scroll scrollbar-hide">

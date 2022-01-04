@@ -8,7 +8,7 @@ export const getCurrentDateTime = (time) => {
         return number;
     }
     const date = new Date(time ?? Date.now());
-    return (date.getFullYear() + '.' + addZero(date.getMonth()) + '.' + addZero(date.getDate()) + '. ' + addZero(date.getHours()) + ':' + addZero(date.getMinutes()))
+    return (date.getFullYear() + '.' + addZero(date.getMonth()+1) + '.' + addZero(date.getDate()) + '. ' + addZero(date.getHours()) + ':' + addZero(date.getMinutes()))
 }
 
 export const getFormattedNumber = (string) => {
